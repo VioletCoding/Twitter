@@ -82,7 +82,7 @@ export const HomePage = () => {
             </View>
         )
     }
-
+    // @ts-ignore
     const renderFleet = ({ item }) => {
         return (
             <View style={styles.fleet}>
@@ -152,7 +152,9 @@ export const HomePage = () => {
                         </Text>
                     </View>
                     {/* 正文媒体 */}
+
                     {item.mediaList &&
+                        // @ts-ignore
                         item.mediaList.map(media => (
                             // TODO 需要判断媒体类型
                             <Image

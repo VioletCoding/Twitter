@@ -1,4 +1,5 @@
-import { AntDesign, Ionicons, Octicons } from '@expo/vector-icons'
+import { AntDesign, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons'
+import { NavigationContainer } from '@react-navigation/native'
 import { useState } from 'react'
 import {
   Dimensions,
@@ -10,8 +11,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import logo from './assets/favicon.png'
-import avatar from './assets/icon.png'
+import logo from './assets/logo.jpg'
 import { colors } from './styles/colors'
 const width = Dimensions.get('window').width
 export default function App() {
@@ -33,8 +33,34 @@ export default function App() {
           source: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
         }
       ]
+    },
+    {
+      id: 2,
+      nickname: 'Momo Kawaii',
+      username: '@kawaii',
+      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+      content:
+        'Miss me?',
+      likes: 10,
+      comments: 66,
+      reFleet: 77
+    },
+    {
+      id: 3,
+      nickname: '神之勇域',
+      username: '@yyds',
+      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+      content:
+        '我好羡慕勇哥啊',
+      likes: 888,
+      comments: 999,
+      reFleet: 30
     }
   ])
+
+  const separator = () => {
+    return (<View style={{ width: '100%', height: 0.7, backgroundColor: colors.slate['300'] }}></View>)
+  }
 
   const fleetOperation = (icon, count) => {
     return (
@@ -80,8 +106,7 @@ export default function App() {
           style={{
             display: 'flex',
             marginLeft: 10,
-            flexGrow: 1,
-            borderWidth: 1
+            flexGrow: 1
           }}
         >
           {/* 个人信息 */}
@@ -91,8 +116,7 @@ export default function App() {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              height: 25,
-              borderBottomWidth: 1
+              height: 25
             }}
           >
             <View
@@ -133,8 +157,8 @@ export default function App() {
             </TouchableOpacity>
           </View>
           {/* 正文 */}
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ flexWrap: true, flex: 1 }}>
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
+            <Text style={{ flexWrap: true, flex: 1, fontWeight: '600' }} numberOfLines={10}>
               {item.content}
             </Text>
           </View>
@@ -161,6 +185,7 @@ export default function App() {
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-between',
+              alignItems: 'center',
               marginTop: 10
             }}
           >
@@ -168,7 +193,7 @@ export default function App() {
               <Ionicons
                 name="chatbubble-outline"
                 size={24}
-                color={colors.slate['400']}
+                color={colors.slate['500']}
               />,
               item.comments
             )}
@@ -202,27 +227,28 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={avatar}
-          style={styles.headerImage}
+    <NavigationContainer>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Image
+            source={{ uri: 'https://portrait.gitee.com/uploads/avatars/user/1775/5326174_monochrome1998_1636865249.png!avatar60' }}
+            style={styles.headerImage}
+          />
+          <Image
+            source={logo}
+            style={styles.logo}
+          />
+          <MaterialCommunityIcons name="star-minus-outline" size={35} color="black" />
+        </View>
+        <FlatList
+          data={fleetList}
+          keyExtractor={item => item.id}
+          renderItem={renderFleet}
+          initialNumToRender={10}
+          ItemSeparatorComponent={separator}
         />
-        <Image
-          source={logo}
-          style={styles.logo}
-        />
-        <Image
-          source={avatar}
-          style={styles.headerImage}
-        />
-      </View>
-      <FlatList
-        data={fleetList}
-        keyExtractor={item => item.id}
-        renderItem={renderFleet}
-      />
-    </SafeAreaView>
+      </SafeAreaView>
+    </NavigationContainer>
   )
 }
 
@@ -242,17 +268,14 @@ const styles = StyleSheet.create({
     padding: 10
   },
   headerImage: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     borderRadius: '50%',
     resizeMode: 'cover'
   },
   logo: {
     width: 35,
     height: 35,
-    borderRadius: '50%',
-    resizeMode: 'cover',
-    borderWidth: 1
   },
   body: {
     flex: 1,
@@ -263,6 +286,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexGrow: 1,
     padding: 10,
-    borderWidth: 1
   }
 })

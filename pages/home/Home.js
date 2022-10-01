@@ -1,7 +1,6 @@
-import { AntDesign, Ionicons, MaterialCommunityIcons, Octicons } from '@expo/vector-icons'
-import { useState } from 'react'
+import { AntDesign, Ionicons, Octicons } from '@expo/vector-icons'
+import { useCallback, useState } from 'react'
 import {
-    Dimensions,
     FlatList,
     Image,
     SafeAreaView,
@@ -10,10 +9,9 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import logo from '../../assets/logo.jpg'
 import { colors } from '../../styles/colors'
-const width = Dimensions.get('window').width
-export const Home = () => {
+export const Home = ({ props }) => {
+    const [refreshing, setRefreshing] = useState(false)
     const [fleetList, setFleetList] = useState([
         {
             id: 1,
@@ -128,15 +126,6 @@ export const Home = () => {
                             <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                                 {item.nickname}
                             </Text>
-                            <View
-                                style={{
-                                    backgroundColor: colors.sky['500'],
-                                    width: 10,
-                                    height: 10,
-                                    borderRadius: '50%',
-                                    marginLeft: 5
-                                }}
-                            />
                             <Text
                                 style={{
                                     marginLeft: 5,
@@ -149,8 +138,8 @@ export const Home = () => {
                         </View>
                         <TouchableOpacity>
                             <Ionicons
-                                name="ellipsis-horizontal"
-                                size={24}
+                                name="ios-ellipsis-horizontal"
+                                size={20}
                                 color={colors.slate['300']}
                             />
                         </TouchableOpacity>
@@ -225,25 +214,23 @@ export const Home = () => {
         )
     }
 
+    const onRefresh = useCallback(() => {
+        setRefreshing(true)
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 1000)
+    })
+
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <Image
-                    source={{ uri: 'https://portrait.gitee.com/uploads/avatars/user/1775/5326174_monochrome1998_1636865249.png!avatar60' }}
-                    style={styles.headerImage}
-                />
-                <Image
-                    source={logo}
-                    style={styles.logo}
-                />
-                <MaterialCommunityIcons name="star-minus-outline" size={35} color="black" />
-            </View>
             <FlatList
                 data={fleetList}
                 keyExtractor={item => item.id}
                 renderItem={renderFleet}
                 initialNumToRender={10}
                 ItemSeparatorComponent={separator}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
             />
         </SafeAreaView>
     )
@@ -255,34 +242,14 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex'
     },
-    header: {
-        width: width,
-        height: 60,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: 'white',
-        padding: 10
-    },
-    headerImage: {
-        width: 40,
-        height: 40,
-        borderRadius: '50%',
-        resizeMode: 'cover'
-    },
-    logo: {
-        width: 35,
-        height: 35,
-    },
     body: {
-        flex: 1,
-        backgroundColor: '#F2F3F5'
+        flex: 1
     },
     fleet: {
         display: 'flex',
         flexDirection: 'row',
         flexGrow: 1,
         padding: 10,
+        backgroundColor: '#ffffff'
     }
 })

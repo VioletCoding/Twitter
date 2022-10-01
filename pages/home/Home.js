@@ -1,4 +1,4 @@
-import { AntDesign, Ionicons, Octicons } from '@expo/vector-icons'
+import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { useCallback, useState } from 'react'
 import {
     FlatList,
@@ -72,8 +72,8 @@ export const Home = ({ props }) => {
                 <Text
                     style={{
                         fontSize: 14,
-                        marginLeft: 10,
-                        fontWeight: '600',
+                        marginLeft: 7,
+                        fontWeight: '500',
                         color: colors.slate['400']
                     }}
                 >
@@ -202,8 +202,8 @@ export const Home = ({ props }) => {
                             item.likes
                         )}
                         {fleetOperation(
-                            <Octicons
-                                name="share"
+                            <Ionicons
+                                name="share-outline"
                                 size={24}
                                 color={colors.slate['500']}
                             />

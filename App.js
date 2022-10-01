@@ -1,4 +1,4 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Image, StyleSheet } from 'react-native'
@@ -7,6 +7,7 @@ import { Home } from './pages/home/Home'
 import { MailPage } from './pages/mail/MailPage'
 import { NotificationPage } from './pages/notifications/Notifications'
 import { SearchPage } from './pages/search/Search'
+import { colors } from './styles/colors'
 const Tab = createBottomTabNavigator()
 export default function App() {
   return (
@@ -14,6 +15,8 @@ export default function App() {
       <Tab.Navigator initialRouteName='Home' screenOptions={{
         tabBarShowLabel: false,
         headerStyle: { height: 100 },
+        tabBarActiveTintColor: colors.tabBar.active,
+        tabBarInactiveTintColor: colors.tabBar.inActive,
         headerTitle: (_props) => <Image
           source={logo}
           style={styles.logo}
@@ -22,9 +25,9 @@ export default function App() {
           source={{ uri: 'https://portrait.gitee.com/uploads/avatars/user/1775/5326174_monochrome1998_1636865249.png!avatar60' }}
           style={styles.avatar}
         />,
-        headerRight: (_props) => <MaterialCommunityIcons
-          name="star-minus-outline"
-          size={35}
+        headerRight: (_props) => <Ionicons
+          name="planet-outline"
+          size={30}
           color="black"
           style={{ marginRight: 10 }} />
       }}>

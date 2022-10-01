@@ -15,8 +15,14 @@ const sky = {
     '500': '#0ea5e9'
 }
 
+const tabBar = {
+    active: '#101318',
+    inActive: '#171a1f'
+}
+
 export const colors = {
     slate,
     gray,
-    sky
+    sky,
+    tabBar
 }

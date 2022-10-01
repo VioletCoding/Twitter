@@ -3,10 +3,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Image, StyleSheet } from 'react-native'
 import logo from './assets/logo.jpg'
-import { Home } from './pages/home/Home'
+import { HomePage } from './pages/home/HomePage'
 import { MailPage } from './pages/mail/MailPage'
-import { NotificationPage } from './pages/notifications/Notifications'
-import { SearchPage } from './pages/search/Search'
+import { NotificationPage } from './pages/notifications/NotificationsPage'
+import { SearchPage } from './pages/search/SearchPage'
 import { colors } from './styles/colors'
 const Tab = createBottomTabNavigator()
 export default function App() {
@@ -31,7 +31,7 @@ export default function App() {
           color="black"
           style={{ marginRight: 10 }} />
       }}>
-        <Tab.Screen name="Home" component={Home} options={{
+        <Tab.Screen name="Home" component={HomePage} options={{
           tabBarIcon: ({ focused, color, size }) => <Ionicons
             name={focused ? "home" : "home-outline"}
             size={size}

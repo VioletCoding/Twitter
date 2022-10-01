@@ -10,7 +10,7 @@ import {
     View
 } from 'react-native'
 import { colors } from '../../styles/colors'
-export const Home = ({ props }) => {
+export const HomePage = ({ props }) => {
     const [refreshing, setRefreshing] = useState(false)
     const [fleetList, setFleetList] = useState([
         {
@@ -71,9 +71,9 @@ export const Home = ({ props }) => {
                 {icon}
                 <Text
                     style={{
-                        fontSize: 14,
-                        marginLeft: 7,
-                        fontWeight: '500',
+                        fontSize: 16,
+                        marginLeft: 5,
+                        fontWeight: '400',
                         color: colors.slate['400']
                     }}
                 >

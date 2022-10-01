@@ -19,10 +19,12 @@ export default function App() {
         tabBarInactiveTintColor: colors.tabBar.inActive,
         headerTitle: (_props) => <Image
           source={logo}
+          // @ts-ignore
           style={styles.logo}
         />,
         headerLeft: (_props) => <Image
           source={{ uri: 'https://portrait.gitee.com/uploads/avatars/user/1775/5326174_monochrome1998_1636865249.png!avatar60' }}
+          // @ts-ignore
           style={styles.avatar}
         />,
         headerRight: (_props) => <Ionicons
@@ -69,6 +71,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginLeft: 10,
+    // @ts-ignore
     borderRadius: '50%',
     resizeMode: 'cover'
   },

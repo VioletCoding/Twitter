@@ -1,5 +1,5 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons'
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
     FlatList,
     Image,
@@ -10,9 +10,9 @@ import {
     View
 } from 'react-native'
 import { colors } from '../../styles/colors'
-export const HomePage = ({ props }) => {
+export const HomePage = () => {
     const [refreshing, setRefreshing] = useState(false)
-    const [fleetList, setFleetList] = useState([
+    const [fleetList, setFleetList] = useState<any>([
         {
             id: 1,
             nickname: 'Amazon Web Services',
@@ -59,7 +59,7 @@ export const HomePage = ({ props }) => {
         return (<View style={{ width: '100%', height: 0.7, backgroundColor: colors.slate['300'] }}></View>)
     }
 
-    const fleetOperation = (icon, count) => {
+    const fleetOperation = (icon: any, count?: number) => {
         return (
             <View
                 style={{
@@ -90,6 +90,7 @@ export const HomePage = ({ props }) => {
                 <TouchableOpacity>
                     <Image
                         source={{ uri: item.avatar }}
+                        // @ts-ignore
                         style={{
                             width: 50,
                             height: 50,
@@ -146,7 +147,7 @@ export const HomePage = ({ props }) => {
                     </View>
                     {/* 正文 */}
                     <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                        <Text style={{ flexWrap: true, flex: 1, fontWeight: '600' }} numberOfLines={10}>
+                        <Text style={{ flexWrap: 'wrap', flex: 1, fontWeight: '600' }} numberOfLines={10}>
                             {item.content}
                         </Text>
                     </View>
@@ -219,13 +220,13 @@ export const HomePage = ({ props }) => {
         setTimeout(() => {
             setRefreshing(false)
         }, 1000)
-    })
+    }, [refreshing])
 
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
                 data={fleetList}
-                keyExtractor={item => item.id}
+                keyExtractor={item => String(item.id)}
                 renderItem={renderFleet}
                 initialNumToRender={10}
                 ItemSeparatorComponent={separator}

@@ -2,13 +2,21 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import logo from '../../assets/logo.jpg'
 import { colors } from '../../styles/colors'
+import { useNavigation } from '@react-navigation/native'
 
 /**
  * 登录页
  */
-export const LoginPage = () => {
-    const toLogin = () => {}
-    const toReg = () => {}
+export const Intro = () => {
+    const navigation = useNavigation()
+    const toLogin = () => {
+        // @ts-ignore
+        navigation.navigate('Login')
+    }
+    const toReg = () => {
+        // @ts-ignore
+        navigation.navigate('Register')
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {/* header */}

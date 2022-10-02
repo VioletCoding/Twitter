@@ -1,5 +1,9 @@
 import { PasswordInput } from '@Components/PasswordInput'
+import { appRegister } from '@Network/api/account'
+import { useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'
+// @ts-ignored
+import { ShowTost } from '@Utils/utils'
 import { useState } from 'react'
 import {
     SafeAreaView,
@@ -8,11 +12,26 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
+
 export const Register = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const register = () => {}
+    const navigation = useNavigation()
+    const register = () => {
+        appRegister({
+            account: username,
+            password: password,
+            confirmPassword: confirmPassword
+        })
+            .then(res => {
+                if (res.success) {
+                    navigation.goBack()
+                    ShowTost('注册成功')
+                }
+            })
+            .catch(e => console.log(e))
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
             <View style={{ flex: 1, padding: 20 }}>

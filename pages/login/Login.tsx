@@ -1,5 +1,8 @@
 import { PasswordInput } from '@Components/PasswordInput'
+import { appLogin } from '@Network/api/account'
+import { useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'
+import { ShowTost } from '@Utils/utils'
 import { useState } from 'react'
 import {
     SafeAreaView,
@@ -12,7 +15,19 @@ import {
 export const LoginPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const login = () => {}
+    const navigation = useNavigation()
+    const login = () => {
+        appLogin({ username, password })
+            .then(res => {
+                if (!res.error_code && res.access_token) {
+                    navigation.navigate('TabBar')
+                    ShowTost('欢迎回来')
+                } else {
+                    ShowTost(res.error_description)
+                }
+            })
+            .catch(e => e)
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
             <View style={{ flex: 1, padding: 20 }}>
@@ -26,7 +41,7 @@ export const LoginPage = () => {
                     value={username}
                     onChangeText={setUsername}
                     placeholder='输入你的账号'
-                    maxLength={16}
+                    maxLength={45}
                     autoComplete='email'
                     autoFocus={true}
                     blurOnSubmit={false}

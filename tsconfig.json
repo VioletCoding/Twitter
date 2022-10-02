@@ -29,12 +29,17 @@
             ],
             "@Styles/*": [
                 "styles/*"
+            ],
+            "@Network/*": [
+                "network/*"
+            ],
+            "@Utils/*": [
+                "utils/*"
             ]
         }
     },
     "exclude": [
         "node_modules",
-        "metro.config.js",
         "jest.config.js"
     ],
     "extends": "expo/tsconfig.base"

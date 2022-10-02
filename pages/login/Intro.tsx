@@ -1,8 +1,8 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import logo from '../../assets/logo.jpg'
-import { colors } from '../../styles/colors'
+import logo from '@Assets/logo.jpg'
 import { useNavigation } from '@react-navigation/native'
+import { colors } from '@Styles/colors'
+import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 /**
  * 登录页
@@ -19,6 +19,10 @@ export const Intro = () => {
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <StatusBar
+                barStyle='dark-content'
+                backgroundColor={colors.white}
+            />
             {/* header */}
             <View
                 style={{

@@ -1,13 +1,13 @@
+import logo from '@Assets/logo.jpg'
+import { Intro } from '@Pages/login/Intro'
+import { LoginPage } from '@Pages/login/Login'
+import { Register } from '@Pages/login/Register'
+import { TabBar } from '@Pages/TabBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { RootSiblingParent } from 'react-native-root-siblings'
-import { Intro } from './pages/login/Intro'
-import { TabBar } from './pages/TabBar'
-import { LoginPage } from './pages/login/Login'
-import { Register } from './pages/login/Register'
+import { colors } from '@Styles/colors'
 import { Image } from 'react-native'
-import logo from './assets/logo.jpg'
-
+import { RootSiblingParent } from 'react-native-root-siblings'
 const Stack = createNativeStackNavigator()
 export default function App() {
     return (
@@ -22,7 +22,9 @@ export default function App() {
                                 style={{ width: 40, height: 40 }}
                             />
                         ),
-                        headerBackTitle: '取消'
+                        headerBackTitle: '取消',
+                        headerTintColor: colors.black,
+                        statusBarTranslucent: true
                     }}
                 >
                     <Stack.Screen
@@ -33,15 +35,17 @@ export default function App() {
                     <Stack.Screen
                         name='Login'
                         component={LoginPage}
+                        options={{ headerShadowVisible: false }}
+                    />
+                    <Stack.Screen
+                        name='Register'
+                        component={Register}
+                        options={{ headerShadowVisible: false }}
                     />
                     <Stack.Screen
                         name='TabBar'
                         component={TabBar}
                         options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name='Register'
-                        component={Register}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

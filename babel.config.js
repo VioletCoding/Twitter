@@ -2,6 +2,24 @@ module.exports = function (api) {
     api.cache(true)
     return {
         presets: ['babel-preset-expo'],
-        plugins: []
+        plugins: [
+            ["@babel/plugin-transform-flow-strip-types"],
+            ["@babel/plugin-proposal-decorators", { "legacy": true }],
+            ["@babel/plugin-proposal-class-properties", { "loose": true }],
+            ["module-resolver", {
+                "alias": {
+                    "@Components": "./components",
+                    "@Pages": "./pages",
+                    "@Styles": "./styles",
+                    "@Assets": "./assets"
+                },
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".ts",
+                    ".tsx",
+                ]
+            }],
+        ]
     }
 }

@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
+import { colors } from '@Styles/colors'
 import React, { useCallback, useState } from 'react'
 import {
     FlatList,
@@ -9,7 +10,6 @@ import {
     View
 } from 'react-native'
 import Toast from 'react-native-root-toast'
-import { colors } from '../../styles/colors'
 import { Fleet } from './components/Fleet'
 import { Twitter } from './components/Twitter'
 import { FleetProps } from './components/types'

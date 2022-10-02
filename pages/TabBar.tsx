@@ -1,11 +1,11 @@
+import logo from '@Assets/logo.jpg'
 import { Ionicons } from '@expo/vector-icons'
 import {
     BottomTabNavigationOptions,
     createBottomTabNavigator
 } from '@react-navigation/bottom-tabs'
+import { colors } from '@Styles/colors'
 import { Image, StyleSheet } from 'react-native'
-import logo from '../assets/logo.jpg'
-import { colors } from '../styles/colors'
 import { HomePage } from './home/HomePage'
 import { MailPage } from './mail/MailPage'
 import { NotificationPage } from './notifications/NotificationsPage'

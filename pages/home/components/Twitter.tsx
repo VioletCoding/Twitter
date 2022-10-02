@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons'
 import { useState } from 'react'
 import {
     Image,
@@ -9,8 +10,17 @@ import {
     View
 } from 'react-native'
 import { colors } from '../../../styles/colors'
-export const Twitter = ({ close }: { close: () => void }) => {
+export const Twitter = ({
+    close,
+    send
+}: {
+    close: () => void
+    send: () => void
+}) => {
     const [content, setContent] = useState('')
+    const publishFleet = () => {
+        send()
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {/* 顶部 */}
@@ -18,7 +28,7 @@ export const Twitter = ({ close }: { close: () => void }) => {
                 <TouchableOpacity onPress={close}>
                     <Text style={styles.cancel}>取消</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={publishFleet}>
                     <View style={styles.twitterBtn}>
                         <Text style={styles.twitterBtnText}>发推</Text>
                     </View>
@@ -26,11 +36,15 @@ export const Twitter = ({ close }: { close: () => void }) => {
             </View>
 
             {/* 正文 */}
-            <View style={{ flex: 1, backgroundColor: colors.gray['100'] }}>
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: colors.white,
+                    paddingHorizontal: 10
+                }}
+            >
                 <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View
-                        style={{ flex: 1, backgroundColor: colors.sky['300'] }}
-                    >
+                    <View style={{ flex: 1, marginTop: 10 }}>
                         <Image
                             source={{
                                 uri: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
@@ -43,9 +57,7 @@ export const Twitter = ({ close }: { close: () => void }) => {
                             }}
                         />
                     </View>
-                    <View
-                        style={{ flex: 5, backgroundColor: colors.gray['200'] }}
-                    >
+                    <View style={{ flex: 5, marginTop: 10, marginLeft: 10 }}>
                         <TextInput
                             value={content}
                             onChangeText={setContent}
@@ -55,12 +67,48 @@ export const Twitter = ({ close }: { close: () => void }) => {
                             placeholderTextColor={colors.slate['400']}
                             textAlignVertical='top'
                             multiline={true}
-                            style={{ flex: 1 }}
+                            style={{
+                                flex: 1,
+                                fontSize: 20,
+                                fontWeight: 'bold'
+                            }}
                         />
                     </View>
                 </View>
-
-                <View style={{ height: 60, borderWidth: 1 }}></View>
+                <View
+                    style={{
+                        height: 60,
+                        borderTopWidth: 1,
+                        borderColor: colors.gray['200'],
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginLeft: 10
+                    }}
+                >
+                    <TouchableOpacity>
+                        <Ionicons
+                            name='radio-outline'
+                            size={24}
+                            color={colors.sky['500']}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Ionicons
+                            name='image-outline'
+                            size={24}
+                            color={colors.sky['500']}
+                            style={{ marginLeft: 30 }}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Ionicons
+                            name='location-outline'
+                            size={24}
+                            color={colors.sky['500']}
+                            style={{ marginLeft: 30 }}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     )
@@ -69,11 +117,10 @@ export const Twitter = ({ close }: { close: () => void }) => {
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
-        borderWidth: 1,
         height: 60,
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 10
+        paddingHorizontal: 20
     },
     cancel: {
         fontSize: 22,

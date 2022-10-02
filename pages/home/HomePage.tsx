@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
+import Toast from 'react-native-root-toast'
 import { colors } from '../../styles/colors'
 import { Fleet } from './components/Fleet'
 import { Twitter } from './components/Twitter'
@@ -71,8 +72,14 @@ export const HomePage = () => {
         }, 1000)
     }, [refreshing])
 
-    const toggleTwitter = () => {
-        setShotTwitter(!showTwitter)
+    const sendFleet = () => {
+        setShotTwitter(false)
+        setTimeout(() => {
+            Toast.show('发送成功', {
+                position: Toast.positions.CENTER,
+                animation: true
+            })
+        }, 1500)
     }
 
     return (
@@ -86,10 +93,14 @@ export const HomePage = () => {
                 refreshing={refreshing}
                 onRefresh={onRefresh}
             />
-            <TouchableOpacity onPress={toggleTwitter}>
+            <TouchableOpacity
+                onPress={() => {
+                    setShotTwitter(true)
+                }}
+            >
                 <View style={styles.floatActionButton}>
                     <Ionicons
-                        name="add-sharp"
+                        name='add-sharp'
                         size={30}
                         color={colors.white}
                     />
@@ -97,9 +108,14 @@ export const HomePage = () => {
             </TouchableOpacity>
             <Modal
                 visible={showTwitter}
-                animationType="slide"
+                animationType='slide'
             >
-                <Twitter close={toggleTwitter} />
+                <Twitter
+                    close={() => {
+                        setShotTwitter(false)
+                    }}
+                    send={sendFleet}
+                />
             </Modal>
         </SafeAreaView>
     )

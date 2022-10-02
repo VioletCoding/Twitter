@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Image, StyleSheet } from 'react-native'
+import { RootSiblingParent } from 'react-native-root-siblings'
 import logo from './assets/logo.jpg'
 import { HomePage } from './pages/home/HomePage'
 import { MailPage } from './pages/mail/MailPage'
@@ -34,82 +35,84 @@ export default function App() {
         ),
         headerRight: _props => (
             <Ionicons
-                name="planet-outline"
+                name='planet-outline'
                 size={30}
-                color="black"
+                color='black'
                 style={{ marginRight: 10 }}
             />
         )
     }
 
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                initialRouteName="Home"
-                screenOptions={screenOptions}
-            >
-                <Tab.Screen
-                    name="Home"
-                    component={HomePage}
-                    options={{
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Ionicons
-                                name={focused ? 'home' : 'home-outline'}
-                                size={size}
-                                color={color}
-                            />
-                        )
-                    }}
-                />
-                <Tab.Screen
-                    name="Search"
-                    component={SearchPage}
-                    options={{
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Ionicons
-                                name={focused ? 'search' : 'search-outline'}
-                                size={size}
-                                color={color}
-                            />
-                        )
-                    }}
-                />
-                <Tab.Screen
-                    name="Notifications"
-                    component={NotificationPage}
-                    options={{
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Ionicons
-                                name={
-                                    focused
-                                        ? 'notifications-sharp'
-                                        : 'notifications-outline'
-                                }
-                                size={size}
-                                color={color}
-                            />
-                        )
-                    }}
-                />
-                <Tab.Screen
-                    name="Mail"
-                    component={MailPage}
-                    options={{
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Ionicons
-                                name={
-                                    focused
-                                        ? 'ios-mail-sharp'
-                                        : 'ios-mail-outline'
-                                }
-                                size={size}
-                                color={color}
-                            />
-                        )
-                    }}
-                />
-            </Tab.Navigator>
-        </NavigationContainer>
+        <RootSiblingParent>
+            <NavigationContainer>
+                <Tab.Navigator
+                    initialRouteName='Home'
+                    screenOptions={screenOptions}
+                >
+                    <Tab.Screen
+                        name='Home'
+                        component={HomePage}
+                        options={{
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <Ionicons
+                                    name={focused ? 'home' : 'home-outline'}
+                                    size={size}
+                                    color={color}
+                                />
+                            )
+                        }}
+                    />
+                    <Tab.Screen
+                        name='Search'
+                        component={SearchPage}
+                        options={{
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <Ionicons
+                                    name={focused ? 'search' : 'search-outline'}
+                                    size={size}
+                                    color={color}
+                                />
+                            )
+                        }}
+                    />
+                    <Tab.Screen
+                        name='Notifications'
+                        component={NotificationPage}
+                        options={{
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <Ionicons
+                                    name={
+                                        focused
+                                            ? 'notifications-sharp'
+                                            : 'notifications-outline'
+                                    }
+                                    size={size}
+                                    color={color}
+                                />
+                            )
+                        }}
+                    />
+                    <Tab.Screen
+                        name='Mail'
+                        component={MailPage}
+                        options={{
+                            tabBarIcon: ({ focused, color, size }) => (
+                                <Ionicons
+                                    name={
+                                        focused
+                                            ? 'ios-mail-sharp'
+                                            : 'ios-mail-outline'
+                                    }
+                                    size={size}
+                                    color={color}
+                                />
+                            )
+                        }}
+                    />
+                </Tab.Navigator>
+            </NavigationContainer>
+        </RootSiblingParent>
     )
 }
 

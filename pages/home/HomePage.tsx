@@ -51,7 +51,7 @@ export const HomePage = () => {
     ])
 
     const separator = () => {
-        return <View style={{ width: '100%', height: 0.7, backgroundColor: colors.slate['300'] }} />
+        return <View style={styles.separator} />
     }
 
     const renderFleet = (fleetProps: any) => {
@@ -87,4 +87,7 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex'
     },
+    separator: {
+        width: '100%', height: 0.7, backgroundColor: colors.slate['300']
+    }
 })

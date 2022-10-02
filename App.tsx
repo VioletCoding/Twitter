@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
 import { Image, StyleSheet } from 'react-native'
 import logo from './assets/logo.jpg'
@@ -10,29 +10,22 @@ import { SearchPage } from './pages/search/SearchPage'
 import { colors } from './styles/colors'
 const Tab = createBottomTabNavigator()
 export default function App() {
+
+  const screenOptions: BottomTabNavigationOptions = {
+    tabBarShowLabel: false,
+    headerStyle: { height: 100 },
+    tabBarActiveTintColor: colors.tabBar.active,
+    tabBarInactiveTintColor: colors.tabBar.inActive,
+    headerTitle: (_props) => <Image source={logo} style={styles.logo} />,
+    headerLeft: (_props) => <Image source={{ uri: 'https://portrait.gitee.com/uploads/avatars/user/1775/5326174_monochrome1998_1636865249.png!avatar60' }}
+      style={styles.avatar}
+    />,
+    headerRight: (_props) => <Ionicons name="planet-outline" size={30} color="black" style={{ marginRight: 10 }} />
+  }
+
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName='Home' screenOptions={{
-        tabBarShowLabel: false,
-        headerStyle: { height: 100 },
-        tabBarActiveTintColor: colors.tabBar.active,
-        tabBarInactiveTintColor: colors.tabBar.inActive,
-        headerTitle: (_props) => <Image
-          source={logo}
-          // @ts-ignore
-          style={styles.logo}
-        />,
-        headerLeft: (_props) => <Image
-          source={{ uri: 'https://portrait.gitee.com/uploads/avatars/user/1775/5326174_monochrome1998_1636865249.png!avatar60' }}
-          // @ts-ignore
-          style={styles.avatar}
-        />,
-        headerRight: (_props) => <Ionicons
-          name="planet-outline"
-          size={30}
-          color="black"
-          style={{ marginRight: 10 }} />
-      }}>
+      <Tab.Navigator initialRouteName='Home' screenOptions={screenOptions}>
         <Tab.Screen name="Home" component={HomePage} options={{
           tabBarIcon: ({ focused, color, size }) => <Ionicons
             name={focused ? "home" : "home-outline"}
@@ -71,8 +64,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginLeft: 10,
-    // @ts-ignore
-    borderRadius: '50%',
+    borderRadius: 1000,
     resizeMode: 'cover'
   },
 })

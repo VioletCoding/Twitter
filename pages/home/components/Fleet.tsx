@@ -1,9 +1,6 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import React from 'react'
-import {
-    Image, StyleSheet, Text,
-    TouchableOpacity, View
-} from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors } from '../../../styles/colors'
 import { FleetProps } from './types'
 /**
@@ -13,12 +10,12 @@ import { FleetProps } from './types'
 export const Fleet = (props: FleetProps) => {
     const fleetOperation = (icon: any, count?: number) => {
         return (
-            <View style={styles.opsContainer}>
-                {icon}
-                <Text style={styles.opsText}>
-                    {count}
-                </Text>
-            </View>
+            <TouchableOpacity>
+                <View style={styles.opsContainer}>
+                    {icon}
+                    <Text style={styles.opsText}>{count}</Text>
+                </View>
+            </TouchableOpacity>
         )
     }
     return (
@@ -35,12 +32,8 @@ export const Fleet = (props: FleetProps) => {
                 {/* 个人信息 */}
                 <View style={styles.userInfo}>
                     <View style={styles.header}>
-                        <Text style={styles.nickname}>
-                            {props.nickname}
-                        </Text>
-                        <Text style={styles.username}>
-                            {props.username}
-                        </Text>
+                        <Text style={styles.nickname}>{props.nickname}</Text>
+                        <Text style={styles.username}>{props.username}</Text>
                     </View>
                     <TouchableOpacity>
                         <Ionicons
@@ -52,7 +45,10 @@ export const Fleet = (props: FleetProps) => {
                 </View>
                 {/* 正文 */}
                 <View style={styles.contentContainer}>
-                    <Text style={styles.content} numberOfLines={10}>
+                    <Text
+                        style={styles.content}
+                        numberOfLines={10}
+                    >
                         {props.content}
                     </Text>
                 </View>
@@ -103,14 +99,10 @@ export const Fleet = (props: FleetProps) => {
             </View>
         </View>
     )
-
 }
-
-
 
 const styles = StyleSheet.create({
     opsContainer: {
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
     },
@@ -121,7 +113,6 @@ const styles = StyleSheet.create({
         color: colors.slate['400']
     },
     fleet: {
-        display: 'flex',
         flexDirection: 'row',
         flexGrow: 1,
         padding: 10,
@@ -134,19 +125,16 @@ const styles = StyleSheet.create({
         resizeMode: 'cover'
     },
     main: {
-        display: 'flex',
         marginLeft: 10,
         flexGrow: 1
     },
     userInfo: {
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         height: 25
     },
     header: {
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
     },
@@ -177,7 +165,6 @@ const styles = StyleSheet.create({
     },
     ops: {
         flexGrow: 1,
-        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

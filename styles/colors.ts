@@ -24,11 +24,13 @@ const tabBar = {
 }
 
 const white = '#ffffff'
+const black = '#000000'
 
 export const colors = {
     slate,
     gray,
     sky,
     tabBar,
-    white
+    white,
+    black
 }

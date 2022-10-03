@@ -1,3 +1,4 @@
+// @ts-ignored
 import logo from '@Assets/logo.jpg'
 import { Intro } from '@Pages/login/Intro'
 import { LoginPage } from '@Pages/login/Login'

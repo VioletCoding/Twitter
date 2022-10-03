@@ -7,6 +7,7 @@ import { errorToast, successToast } from '@Utils/utils'
 import React, { useState } from 'react'
 import {
     SafeAreaView,
+    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
@@ -30,14 +31,9 @@ export const LoginPage = () => {
             .catch(e => e)
     }
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
-            <View style={{ flex: 1, padding: 20 }}>
-                <Text
-                    style={{ fontSize: 30, fontWeight: 'bold', marginTop: 20 }}
-                >
-                    使用账号登录
-                </Text>
-
+        <SafeAreaView style={styles.safeAreaView}>
+            <View style={styles.title}>
+                <Text style={styles.titleText}>使用账号登录</Text>
                 <TextInput
                     value={username}
                     onChangeText={setUsername}
@@ -49,12 +45,7 @@ export const LoginPage = () => {
                     clearButtonMode='always'
                     keyboardType='email-address'
                     textContentType='username'
-                    style={{
-                        height: 60,
-                        borderBottomWidth: 1,
-                        borderColor: colors.gray['300'],
-                        marginTop: 20
-                    }}
+                    style={styles.usernameInput}
                 />
 
                 <PasswordInput
@@ -63,32 +54,14 @@ export const LoginPage = () => {
                     placeholder='输入你的密码'
                 />
                 <TouchableOpacity onPress={login}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: colors.black,
-                            height: 60,
-                            borderRadius: 30,
-                            marginTop: 50
-                        }}
-                    >
-                        <Text style={{ color: colors.white, fontSize: 26 }}>
-                            登录
-                        </Text>
+                    <View style={styles.loginBtn}>
+                        <Text style={styles.loginText}>登录</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <View
                         hitSlop={{ top: 0, bottom: 20, left: 20, right: 20 }}
-                        style={{
-                            height: 30,
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: 20
-                        }}
+                        style={styles.forget}
                     >
                         <Text>忘记密码？</Text>
                     </View>
@@ -97,3 +70,41 @@ export const LoginPage = () => {
         </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    safeAreaView: { flex: 1, backgroundColor: colors.white },
+    title: { flex: 1, padding: 20 },
+    titleText: { fontSize: 30, fontWeight: 'bold', marginTop: 20 },
+    usernameInput: {
+        height: 60,
+        borderBottomWidth: 1,
+        borderColor: colors.gray['300'],
+        marginTop: 20
+    },
+    passwordInput: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.black,
+        height: 60,
+        borderRadius: 30,
+        marginTop: 50
+    },
+    loginBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.black,
+        height: 60,
+        borderRadius: 30,
+        marginTop: 50
+    },
+    loginText: { color: colors.white, fontSize: 26 },
+    forget: {
+        height: 30,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20
+    }
+})

@@ -2,11 +2,11 @@ import { PasswordInput } from '@Components/PasswordInput'
 import { appRegister } from '@Network/api/account'
 import { useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'
-// @ts-ignored
 import { errorToast, successToast } from '@Utils/utils'
 import { useState } from 'react'
 import {
     SafeAreaView,
+    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
@@ -47,14 +47,9 @@ export const Register = () => {
         }
     }
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
-            <View style={{ flex: 1, padding: 20 }}>
-                <Text
-                    style={{ fontSize: 30, fontWeight: 'bold', marginTop: 20 }}
-                >
-                    注册你的账号
-                </Text>
-
+        <SafeAreaView style={styles.container}>
+            <View style={styles.main}>
+                <Text style={styles.title}>注册你的账号</Text>
                 <TextInput
                     value={username}
                     onChangeText={setUsername}
@@ -66,12 +61,7 @@ export const Register = () => {
                     clearButtonMode='always'
                     keyboardType='email-address'
                     textContentType='username'
-                    style={{
-                        height: 60,
-                        borderBottomWidth: 1,
-                        borderColor: colors.gray['300'],
-                        marginTop: 20
-                    }}
+                    style={styles.account}
                 />
 
                 <PasswordInput
@@ -85,23 +75,33 @@ export const Register = () => {
                     placeholder='请确认密码'
                 />
                 <TouchableOpacity onPress={register}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: colors.black,
-                            height: 60,
-                            borderRadius: 30,
-                            marginTop: 50
-                        }}
-                    >
-                        <Text style={{ color: colors.white, fontSize: 26 }}>
-                            注册账号
-                        </Text>
+                    <View style={styles.regBtn}>
+                        <Text style={styles.regText}>注册账号</Text>
                     </View>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.white },
+    main: { flex: 1, padding: 20 },
+    title: { fontSize: 30, fontWeight: 'bold', marginTop: 20 },
+    account: {
+        height: 60,
+        borderBottomWidth: 1,
+        borderColor: colors.gray['300'],
+        marginTop: 20
+    },
+    regBtn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.black,
+        height: 60,
+        borderRadius: 30,
+        marginTop: 50
+    },
+    regText: { color: colors.white, fontSize: 26 }
+})

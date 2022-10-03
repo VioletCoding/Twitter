@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { AuthTokenType } from "./types"
 export const AuthToken = "AuthToken"
 
 
@@ -34,10 +35,10 @@ export const isSignIn = async (): Promise<boolean> => {
     return result?.access_token != null
 }
 
-export const setAuthToken = (data: any): Promise<void> => {
+export const setAuthToken = (data: AuthTokenType): Promise<void> => {
     return save(AuthToken, data)
 }
 
-export const getAuthToken = async () => {
+export const getAuthToken = async (): Promise<AuthTokenType> => {
     return await read(AuthToken)
 }

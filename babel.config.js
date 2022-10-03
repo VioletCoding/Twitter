@@ -21,6 +21,8 @@ module.exports = function (api) {
                     ".jsx",
                     ".ts",
                     ".tsx",
+                    ".jpg",
+                    ".png"
                 ]
             }],
         ]

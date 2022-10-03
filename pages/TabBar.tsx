@@ -1,3 +1,4 @@
+// @ts-ignored
 import logo from '@Assets/logo.jpg'
 import { Ionicons } from '@expo/vector-icons'
 import { refreshToken } from '@Network/api/account'

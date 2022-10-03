@@ -1,7 +1,14 @@
 import logo from '@Assets/logo.jpg'
-import { useNavigation } from '@react-navigation/native'
+import { StackActions, useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'
-import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import {
+    Image,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 /**
  * 登录页
@@ -9,12 +16,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export const Intro = () => {
     const navigation = useNavigation()
     const toLogin = () => {
-        // @ts-ignore
-        navigation.navigate('Login')
+        navigation.dispatch(StackActions.push('Login'))
     }
     const toReg = () => {
-        // @ts-ignore
-        navigation.navigate('Register')
+        navigation.dispatch(StackActions.push('Register'))
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -23,69 +28,24 @@ export const Intro = () => {
                 backgroundColor={colors.white}
             />
             {/* header */}
-            <View
-                style={{
-                    height: 60,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}
-            >
+            <View style={styles.header}>
                 <Image
                     source={logo}
-                    style={{ width: 40, height: 40 }}
+                    style={styles.logo}
                 />
             </View>
             {/* body */}
-            <View
-                style={{
-                    flex: 1,
-                    paddingHorizontal: 25,
-                    justifyContent: 'space-around',
-                    flexShrink: 1
-                }}
-            >
-                <Text
-                    style={{
-                        fontSize: 34,
-                        fontWeight: 'bold',
-                        textAlign: 'center'
-                    }}
-                >
-                    查看世界正在发生的新鲜事
-                </Text>
-
+            <View style={styles.bodyView}>
+                <Text style={styles.sloganText}>查看世界正在发生的新鲜事</Text>
                 <View>
                     <TouchableOpacity onPress={toReg}>
-                        <View
-                            style={{
-                                height: 60,
-                                borderRadius: 30,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: colors.black,
-                                marginTop: 30
-                            }}
-                        >
-                            <Text style={{ fontSize: 24, color: colors.white }}>
-                                创建账号
-                            </Text>
+                        <View style={styles.regBtn}>
+                            <Text style={styles.regText}>创建账号</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={toLogin}>
-                        <View
-                            style={{
-                                height: 60,
-                                borderRadius: 30,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: colors.sky['500'],
-                                marginTop: 30
-                            }}
-                        >
-                            <Text style={{ fontSize: 24, color: colors.white }}>
-                                登录
-                            </Text>
+                        <View style={styles.loginBtn}>
+                            <Text style={styles.loginText}>登录</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -93,3 +53,49 @@ export const Intro = () => {
         </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    logo: {
+        width: 40,
+        height: 40,
+        resizeMode: 'cover'
+    },
+    header: {
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    bodyView: {
+        flex: 1,
+        paddingHorizontal: 25,
+        justifyContent: 'space-around',
+        flexShrink: 1
+    },
+    sloganText: {
+        fontSize: 34,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    regBtn: {
+        height: 60,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.black,
+        marginTop: 30
+    },
+    regText: { fontSize: 24, color: colors.white },
+    loginBtn: {
+        height: 60,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.sky['500'],
+        marginTop: 30
+    },
+    loginText: {
+        fontSize: 24,
+        color: colors.white
+    }
+})

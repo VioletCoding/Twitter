@@ -2,7 +2,7 @@ import { PasswordInput } from '@Components/PasswordInput'
 import { appLogin } from '@Network/api/account'
 import { useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'
-import { ShowTost } from '@Utils/utils'
+import { successToast } from '@Utils/utils'
 import { useState } from 'react'
 import {
     SafeAreaView,
@@ -20,10 +20,11 @@ export const LoginPage = () => {
         appLogin({ username, password })
             .then(res => {
                 if (!res.error_code && res.access_token) {
+                    // @ts-ignored
                     navigation.navigate('TabBar')
-                    ShowTost('欢迎回来')
+                    successToast('欢迎回来')
                 } else {
-                    ShowTost(res.error_description)
+                    successToast(res.error_description)
                 }
             })
             .catch(e => e)

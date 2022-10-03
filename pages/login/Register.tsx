@@ -3,7 +3,7 @@ import { appRegister } from '@Network/api/account'
 import { useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'
 // @ts-ignored
-import { ShowTost } from '@Utils/utils'
+import { successToast } from '@Utils/utils'
 import { useState } from 'react'
 import {
     SafeAreaView,
@@ -19,18 +19,24 @@ export const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const navigation = useNavigation()
     const register = () => {
-        appRegister({
-            account: username,
-            password: password,
-            confirmPassword: confirmPassword
-        })
-            .then(res => {
-                if (res.success) {
-                    navigation.goBack()
-                    ShowTost('注册成功')
-                }
+        if (username && password && confirmPassword) {
+            if (password !== confirmPassword) {
+                successToast('两次密码不一致')
+                return
+            }
+            appRegister({
+                account: username,
+                password: password,
+                confirmPassword: confirmPassword
             })
-            .catch(e => console.log(e))
+                .then(res => {
+                    if (res.success) {
+                        navigation.goBack()
+                        successToast('注册成功')
+                    }
+                })
+                .catch(e => e)
+        }
     }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>

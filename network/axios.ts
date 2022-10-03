@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
-import { ShowTost } from '../utils/utils'
+import { errorToast } from '../utils/utils'
 const instance = axios.create({
     baseURL: 'http://192.168.0.9/api/',
     //默认超时时间
@@ -15,6 +15,14 @@ instance.interceptors.request.use(
             'Authorization': 'Basic dHdpdHRlcjp0d2l0dGVyX3NlY3JldA==',
             'User-Type': 'app'
         }
+        console.log(`\n
+        Request Start: ======\n
+        Request URI: ${config.baseURL}${config.url} \n 
+        Method: ${config.method} \n 
+        Data: ${JSON.stringify(config.data)} \n 
+        Param: ${JSON.stringify(config.params)} \n 
+        Header: ${JSON.stringify(config.headers)} \n
+        Request End: ======`)
         return config
     },
     (error) => {
@@ -23,8 +31,14 @@ instance.interceptors.request.use(
 )
 instance.interceptors.response.use(
     (resp) => {
+        console.log(`\n
+        Response Start: ======\n
+        Data: ${resp.data} \n
+        HTTP STATUS: ${resp.status} \n
+        Response End: ======`)
+
         const status = resp.status || resp.data.code
-        const message = resp.data.msg || resp.data.error_description || '网络发生故障，请稍后再试'
+        const message = resp.data.msg || resp.data.error_description || '发生了错误，请稍后再试'
         if (status === 401) {
             const navigation = useNavigation()
             // @ts-ignored
@@ -32,15 +46,14 @@ instance.interceptors.response.use(
             return Promise.reject(message)
         }
         if (status !== 200) {
-            ShowTost(message)
+            errorToast(message)
             return Promise.reject(message)
         }
-        console.log(resp.data)
         return resp.data
     },
     (error) => {
-        const msg = error.message || '网络发生故障，请稍后再试'
-        ShowTost(msg)
+        const msg = error.response.data.msg || '发生了错误，请稍后再试'
+        errorToast(msg)
         return Promise.reject(msg)
     }
 )

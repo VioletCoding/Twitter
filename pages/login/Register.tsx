@@ -3,7 +3,7 @@ import { appRegister } from '@Network/api/account'
 import { useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'
 // @ts-ignored
-import { successToast } from '@Utils/utils'
+import { errorToast, successToast } from '@Utils/utils'
 import { useState } from 'react'
 import {
     SafeAreaView,
@@ -20,8 +20,16 @@ export const Register = () => {
     const navigation = useNavigation()
     const register = () => {
         if (username && password && confirmPassword) {
+            if (username.length > 45) {
+                errorToast('账号最大45位数')
+                return
+            }
+            if (password.length < 8 && password.length > 45) {
+                errorToast('密码应处于8-25位之间')
+                return
+            }
             if (password !== confirmPassword) {
-                successToast('两次密码不一致')
+                errorToast('两次密码不一致')
                 return
             }
             appRegister({

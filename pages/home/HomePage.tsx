@@ -16,18 +16,26 @@ import { Fleet } from './components/Fleet'
 import { Twitter } from './components/Twitter'
 import { FleetProps, Media } from './components/types'
 export const HomePage = () => {
+    // 下拉刷新状态
     const [refreshing, setRefreshing] = useState(false)
+    // 发推Modal显隐
     const [showModal, setShowModal] = useState(false)
+    // 推文列表
+    const [fleetList, setFleetList] = useState<FleetProps[]>([])
+    // 分页参数
     const [query, setQuery] = useState<PageQuery>({
         size: 10,
         current: 1
     })
-    const [fleetList, setFleetList] = useState<FleetProps[]>([])
-
-    useEffect(() => {
+    // effect
+    useEffect(() => loadFleet(), [query])
+    // 下拉刷新Fleet
+    const onRefresh = useCallback(() => {
+        setRefreshing(true)
         loadFleet()
-    }, [query])
-
+        setRefreshing(false)
+    }, [refreshing])
+    // 加载Fleet
     const loadFleet = () => {
         fleetPage(query)
             .then(res => {
@@ -35,21 +43,11 @@ export const HomePage = () => {
             })
             .catch(() => errorToast('加载推文列表失败'))
     }
-
-    const separator = () => {
-        return <View style={styles.separator} />
-    }
-
-    const renderFleet = (fleetProps: any) => {
-        return <Fleet {...fleetProps} />
-    }
-
-    const onRefresh = useCallback(() => {
-        setRefreshing(true)
-        loadFleet()
-        setRefreshing(false)
-    }, [refreshing])
-
+    // 每个Fleet的分隔线
+    const separator = () => <View style={styles.separator} />
+    // 渲染每个Fleet
+    const renderFleet = (fleetProps: any) => <Fleet {...fleetProps} />
+    // 发推
     const sendFleet = (content: string, mediaList?: Media[]) => {
         addFleet({ content: content, mediaList: mediaList })
             .then(res => {
@@ -61,9 +59,7 @@ export const HomePage = () => {
                 setShowModal(false)
                 loadFleet()
             })
-            .catch(e => {
-                errorToast(e.message || '推文发送失败')
-            })
+            .catch(e => errorToast(e.message || '推文发送失败'))
     }
 
     return (

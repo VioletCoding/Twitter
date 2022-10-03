@@ -8,6 +8,7 @@ import { FleetProps } from './types'
  * @param props FleetProps
  */
 export const Fleet = (props: FleetProps) => {
+    // 每个Fleet底部的操作按钮
     const fleetOperation = (icon: any, count?: number) => {
         return (
             <TouchableOpacity>
@@ -37,7 +38,7 @@ export const Fleet = (props: FleetProps) => {
                     </View>
                     <TouchableOpacity>
                         <Ionicons
-                            name="ios-ellipsis-horizontal"
+                            name='ios-ellipsis-horizontal'
                             size={20}
                             color={colors.slate['300']}
                         />
@@ -66,7 +67,7 @@ export const Fleet = (props: FleetProps) => {
                 <View style={styles.ops}>
                     {fleetOperation(
                         <Ionicons
-                            name="chatbubble-outline"
+                            name='chatbubble-outline'
                             size={24}
                             color={colors.slate['500']}
                         />,
@@ -74,7 +75,7 @@ export const Fleet = (props: FleetProps) => {
                     )}
                     {fleetOperation(
                         <AntDesign
-                            name="retweet"
+                            name='retweet'
                             size={24}
                             color={colors.slate['500']}
                         />,
@@ -82,7 +83,7 @@ export const Fleet = (props: FleetProps) => {
                     )}
                     {fleetOperation(
                         <AntDesign
-                            name="hearto"
+                            name='hearto'
                             size={24}
                             color={colors.slate['500']}
                         />,
@@ -90,7 +91,7 @@ export const Fleet = (props: FleetProps) => {
                     )}
                     {fleetOperation(
                         <Ionicons
-                            name="share-outline"
+                            name='share-outline'
                             size={24}
                             color={colors.slate['500']}
                         />

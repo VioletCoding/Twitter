@@ -12,13 +12,14 @@ import {
 } from 'react-native'
 import { colors } from '../../../styles/colors'
 import { Media } from './types'
-export const Twitter = ({
-    close,
-    send
-}: {
+interface Callback {
     close: () => void
     send: (content: string, mediaList?: Media[]) => void
-}) => {
+}
+/**
+ * 发推面板
+ */
+export const Twitter = ({ close, send }: Callback) => {
     const [content, setContent] = useState('')
     const publishFleet = () => {
         if (!content) {
@@ -42,28 +43,17 @@ export const Twitter = ({
             </View>
 
             {/* 正文 */}
-            <View
-                style={{
-                    flex: 1,
-                    backgroundColor: colors.white,
-                    paddingHorizontal: 10
-                }}
-            >
+            <View style={styles.mainBody}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                     <View style={{ flex: 1, marginTop: 10 }}>
                         <Image
                             source={{
                                 uri: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
                             }}
-                            style={{
-                                width: 60,
-                                height: 60,
-                                borderRadius: 1000,
-                                resizeMode: 'cover'
-                            }}
+                            style={styles.avatar}
                         />
                     </View>
-                    <View style={{ flex: 5, marginTop: 10, marginLeft: 10 }}>
+                    <View style={styles.contentView}>
                         <TextInput
                             value={content}
                             onChangeText={setContent}
@@ -73,24 +63,11 @@ export const Twitter = ({
                             placeholderTextColor={colors.slate['400']}
                             textAlignVertical='top'
                             multiline={true}
-                            style={{
-                                flex: 1,
-                                fontSize: 20,
-                                fontWeight: 'bold'
-                            }}
+                            style={styles.contentInput}
                         />
                     </View>
                 </View>
-                <View
-                    style={{
-                        height: 60,
-                        borderTopWidth: 1,
-                        borderColor: colors.gray['200'],
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginLeft: 10
-                    }}
-                >
+                <View style={styles.bottomOps}>
                     <TouchableOpacity>
                         <Ionicons
                             name='radio-outline'
@@ -143,5 +120,25 @@ const styles = StyleSheet.create({
     twitterBtnText: {
         color: colors.white,
         fontSize: 20
-    }
+    },
+    mainBody: {
+        flex: 1,
+        backgroundColor: colors.white,
+        paddingHorizontal: 10
+    },
+    avatar: { width: 60, height: 60, borderRadius: 1000, resizeMode: 'cover' },
+    bottomOps: {
+        height: 60,
+        borderTopWidth: 1,
+        borderColor: colors.gray['200'],
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: 10
+    },
+    contentView: {
+        flex: 5,
+        marginTop: 10,
+        marginLeft: 10
+    },
+    contentInput: { flex: 1, fontSize: 20, fontWeight: 'bold' }
 })

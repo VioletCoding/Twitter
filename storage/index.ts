@@ -34,8 +34,8 @@ export const isSignIn = async (): Promise<boolean> => {
     return result?.access_token != null
 }
 
-export const setAuthToken = (data: any): void => {
-    save(AuthToken, data)
+export const setAuthToken = (data: any): Promise<void> => {
+    return save(AuthToken, data)
 }
 
 export const getAuthToken = async () => {

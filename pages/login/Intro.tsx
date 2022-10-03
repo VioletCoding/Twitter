@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'
 import { Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
 /**
  * 登录页
  */

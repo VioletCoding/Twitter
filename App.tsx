@@ -6,15 +6,23 @@ import { TabBar } from '@Pages/TabBar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { colors } from '@Styles/colors'
+import React from 'react'
 import { Image } from 'react-native'
 import { RootSiblingParent } from 'react-native-root-siblings'
+import { isSignIn } from './storage'
 const Stack = createNativeStackNavigator()
 export default function App() {
+    const [isLogin, setIsLogin] = React.useState(false)
+    const bootstrap = async () => {
+        const result = await isSignIn()
+        setIsLogin(result)
+    }
+    bootstrap()
     return (
         <RootSiblingParent>
             <NavigationContainer>
                 <Stack.Navigator
-                    initialRouteName='Intro'
+                    initialRouteName={isLogin ? 'TabBar' : 'Intro'}
                     screenOptions={{
                         headerTitle: _props => (
                             <Image

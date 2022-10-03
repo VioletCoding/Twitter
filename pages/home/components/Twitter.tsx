@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
+import { errorToast } from '@Utils/utils'
 import { useState } from 'react'
 import {
     Image,
@@ -10,16 +11,21 @@ import {
     View
 } from 'react-native'
 import { colors } from '../../../styles/colors'
+import { Media } from './types'
 export const Twitter = ({
     close,
     send
 }: {
     close: () => void
-    send: () => void
+    send: (content: string, mediaList?: Media[]) => void
 }) => {
     const [content, setContent] = useState('')
     const publishFleet = () => {
-        send()
+        if (!content) {
+            errorToast('请输入推文')
+            return
+        }
+        send(content)
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>

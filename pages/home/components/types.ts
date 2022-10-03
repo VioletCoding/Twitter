@@ -29,7 +29,7 @@ export interface Media {
     // The id
     id: string,
     // 文件类型
-    type: 'image' | 'video' | string,
+    type: 'image' | 'video' | 'audio',
     // 文件链接
     source: string
 }

@@ -1,10 +1,10 @@
 import { PasswordInput } from '@Components/PasswordInput'
 import { passwordLogin } from '@Network/api/account'
 import { StackActions, useNavigation } from '@react-navigation/native'
-import { AuthToken, save } from '@Storage/index'
+import { setAuthToken } from '@Storage/index'
 import { colors } from '@Styles/colors'
 import { errorToast, successToast } from '@Utils/utils'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
     SafeAreaView,
     Text,
@@ -12,23 +12,17 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-
 export const LoginPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigation = useNavigation()
     const login = () => {
         passwordLogin({ username, password })
-            .then(res => {
+            .then(async res => {
                 if (!res.error_code && res.access_token) {
-                    save(AuthToken, res)
-                        .then(() => {
-                            navigation.dispatch(StackActions.replace('TabBar'))
-                            successToast('欢迎回来')
-                        })
-                        .catch(() => {
-                            errorToast('未获得存储权限')
-                        })
+                    await setAuthToken(res)
+                    navigation.dispatch(StackActions.replace('TabBar'))
+                    successToast('欢迎回来')
                 } else {
                     errorToast(res.error_description)
                 }

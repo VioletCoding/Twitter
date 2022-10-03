@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons'
+import { addFleet, fleetPage } from '@Network/api/fleet'
 import { colors } from '@Styles/colors'
-import React, { useCallback, useState } from 'react'
+import { errorToast, successToast } from '@Utils/utils'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     FlatList,
     Modal,
@@ -9,53 +11,30 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import Toast from 'react-native-root-toast'
+import { PageQuery } from 'types'
 import { Fleet } from './components/Fleet'
 import { Twitter } from './components/Twitter'
-import { FleetProps } from './components/types'
+import { FleetProps, Media } from './components/types'
 export const HomePage = () => {
     const [refreshing, setRefreshing] = useState(false)
-    const [showTwitter, setShotTwitter] = useState(false)
-    const [fleetList, setFleetList] = useState<FleetProps[]>([
-        {
-            id: '1',
-            nickname: 'Amazon Web Services',
-            username: '@awscloud',
-            avatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-            content:
-                'AWS Power businesses in Singapore, to reach more audiences, gain more opportunities for growth, and offer more security. Do more with AWS.',
-            likes: 202,
-            comments: 9,
-            retweet: 21,
-            mediaList: [
-                {
-                    id: '1',
-                    type: 'image',
-                    source: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-                }
-            ]
-        },
-        {
-            id: '2',
-            nickname: 'Momo Kawaii',
-            username: '@kawaii',
-            avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-            content: 'Miss me?',
-            likes: 10,
-            comments: 66,
-            retweet: 77
-        },
-        {
-            id: '3',
-            nickname: '神之勇域',
-            username: '@yyds',
-            avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-            content: '我好羡慕勇哥啊',
-            likes: 888,
-            comments: 999,
-            retweet: 30
-        }
-    ])
+    const [showModal, setShowModal] = useState(false)
+    const [query, setQuery] = useState<PageQuery>({
+        size: 10,
+        current: 1
+    })
+    const [fleetList, setFleetList] = useState<FleetProps[]>([])
+
+    useEffect(() => {
+        loadFleet()
+    }, [query])
+
+    const loadFleet = () => {
+        fleetPage(query)
+            .then(res => {
+                setFleetList(res.data.records)
+            })
+            .catch(() => errorToast('加载推文列表失败'))
+    }
 
     const separator = () => {
         return <View style={styles.separator} />
@@ -67,19 +46,24 @@ export const HomePage = () => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true)
-        setTimeout(() => {
-            setRefreshing(false)
-        }, 1000)
+        loadFleet()
+        setRefreshing(false)
     }, [refreshing])
 
-    const sendFleet = () => {
-        setShotTwitter(false)
-        setTimeout(() => {
-            Toast.show('发送成功', {
-                position: Toast.positions.CENTER,
-                animation: true
+    const sendFleet = (content: string, mediaList?: Media[]) => {
+        addFleet({ content: content, mediaList: mediaList })
+            .then(res => {
+                if (res.success) {
+                    successToast('已发送推文')
+                } else {
+                    errorToast(res.msg || '推文发送失败')
+                }
+                setShowModal(false)
+                loadFleet()
             })
-        }, 1500)
+            .catch(e => {
+                errorToast(e.message || '推文发送失败')
+            })
     }
 
     return (
@@ -95,7 +79,7 @@ export const HomePage = () => {
             />
             <TouchableOpacity
                 onPress={() => {
-                    setShotTwitter(true)
+                    setShowModal(true)
                 }}
             >
                 <View style={styles.floatActionButton}>
@@ -107,13 +91,11 @@ export const HomePage = () => {
                 </View>
             </TouchableOpacity>
             <Modal
-                visible={showTwitter}
+                visible={showModal}
                 animationType='slide'
             >
                 <Twitter
-                    close={() => {
-                        setShotTwitter(false)
-                    }}
+                    close={() => setShowModal(false)}
                     send={sendFleet}
                 />
             </Modal>

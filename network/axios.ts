@@ -1,4 +1,5 @@
-import { useNavigation } from '@react-navigation/native'
+import { StackActions, useNavigation } from '@react-navigation/native'
+import { getAuthToken } from '@Storage/index'
 import axios from 'axios'
 import { errorToast } from '../utils/utils'
 const instance = axios.create({
@@ -10,9 +11,11 @@ const instance = axios.create({
 })
 
 instance.interceptors.request.use(
-    (config) => {
+    async (config) => {
+        const token = await getAuthToken()
         config.headers = {
             'Authorization': 'Basic dHdpdHRlcjp0d2l0dGVyX3NlY3JldA==',
+            'Blade-Auth': `${token?.token_type} ${token?.access_token}` || '',
             'User-Type': 'app'
         }
         console.log(`\n
@@ -33,7 +36,7 @@ instance.interceptors.response.use(
     (resp) => {
         console.log(`\n
         Response Start: ======\n
-        Data: ${resp.data} \n
+        Data: ${JSON.stringify(resp.data)} \n
         HTTP STATUS: ${resp.status} \n
         Response End: ======`)
 
@@ -41,8 +44,7 @@ instance.interceptors.response.use(
         const message = resp.data.msg || resp.data.error_description || '发生了错误，请稍后再试'
         if (status === 401) {
             const navigation = useNavigation()
-            // @ts-ignored
-            navigation.navigate('Login')
+            navigation.dispatch(StackActions.replace('Intro'))
             return Promise.reject(message)
         }
         if (status !== 200) {

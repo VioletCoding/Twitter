@@ -1,9 +1,12 @@
 import logo from '@Assets/logo.jpg'
 import { Ionicons } from '@expo/vector-icons'
+import { refreshToken } from '@Network/api/account'
 import {
     BottomTabNavigationOptions,
     createBottomTabNavigator
 } from '@react-navigation/bottom-tabs'
+import { StackActions, useNavigation } from '@react-navigation/native'
+import { getAuthToken, setAuthToken } from '@Storage/index'
 import { colors } from '@Styles/colors'
 import { Image, StyleSheet } from 'react-native'
 import { HomePage } from './home/HomePage'
@@ -12,6 +15,20 @@ import { NotificationPage } from './notifications/NotificationsPage'
 import { SearchPage } from './search/SearchPage'
 const Tab = createBottomTabNavigator()
 export const TabBar = () => {
+    const navigation = useNavigation()
+    setInterval(async () => {
+        const token = await getAuthToken()
+        refreshToken(token?.refresh_token || '')
+            .then(res => {
+                if (res.access_token) {
+                    setAuthToken(res)
+                }
+            })
+            .catch(() => {
+                navigation.dispatch(StackActions.replace('Login'))
+            })
+    }, 1000 * 60 * 30)
+
     const screenOptions: BottomTabNavigationOptions = {
         tabBarShowLabel: false,
         headerStyle: { height: 100 },

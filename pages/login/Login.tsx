@@ -1,8 +1,9 @@
 import { PasswordInput } from '@Components/PasswordInput'
-import { appLogin } from '@Network/api/account'
-import { useNavigation } from '@react-navigation/native'
+import { passwordLogin } from '@Network/api/account'
+import { StackActions, useNavigation } from '@react-navigation/native'
+import { AuthToken, save } from '@Storage/index'
 import { colors } from '@Styles/colors'
-import { successToast } from '@Utils/utils'
+import { errorToast, successToast } from '@Utils/utils'
 import { useState } from 'react'
 import {
     SafeAreaView,
@@ -17,14 +18,19 @@ export const LoginPage = () => {
     const [password, setPassword] = useState('')
     const navigation = useNavigation()
     const login = () => {
-        appLogin({ username, password })
+        passwordLogin({ username, password })
             .then(res => {
                 if (!res.error_code && res.access_token) {
-                    // @ts-ignored
-                    navigation.navigate('TabBar')
-                    successToast('欢迎回来')
+                    save(AuthToken, res)
+                        .then(() => {
+                            navigation.dispatch(StackActions.replace('TabBar'))
+                            successToast('欢迎回来')
+                        })
+                        .catch(() => {
+                            errorToast('未获得存储权限')
+                        })
                 } else {
-                    successToast(res.error_description)
+                    errorToast(res.error_description)
                 }
             })
             .catch(e => e)

@@ -9,7 +9,7 @@ const instance = axios.create({
     //跨域请求，允许保存cookie
     withCredentials: true
 })
-
+// 请求拦截器
 instance.interceptors.request.use(
     async (config) => {
         const token = await getAuthToken()
@@ -32,6 +32,7 @@ instance.interceptors.request.use(
         return Promise.reject(error)
     }
 )
+// 响应拦截器
 instance.interceptors.response.use(
     (resp) => {
         console.log(`\n

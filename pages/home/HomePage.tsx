@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { addFleet, fleetPage } from '@Network/api/fleet'
 import { colors } from '@Styles/colors'
 import { errorToast } from '@Utils/utils'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     FlatList,
     Modal,
@@ -24,19 +24,14 @@ export const HomePage = () => {
     const [fleetList, setFleetList] = useState<FleetProps[]>([])
     // 分页参数
     const [current, setCurrent] = useState(1)
+    const [reached, setReached] = useState(true)
     const size = 10
-    // 是否有下一页
-    const hasNext = useRef(true)
     useEffect(() => {
         console.log('============useEffect============')
         loadFleet()
     }, [current])
     // 加载Fleet
     const loadFleet = async () => {
-        if (!hasNext.current) {
-            setRefreshing(false)
-            return
-        }
         console.log('Start load fleets...')
         fleetPage({
             size: size,
@@ -49,11 +44,6 @@ export const HomePage = () => {
                 } else {
                     setFleetList(fleetList.concat(res.data.records))
                 }
-                if (res.data.pages === res.data.current) {
-                    hasNext.current = false
-                } else {
-                    hasNext.current = true
-                }
                 setRefreshing(false)
             })
             .catch(() => {
@@ -63,7 +53,6 @@ export const HomePage = () => {
     }
     // 下拉刷新Fleet
     const onRefresh = () => {
-        hasNext.current = true
         setRefreshing(true)
         setCurrent(1)
     }
@@ -72,19 +61,21 @@ export const HomePage = () => {
         addFleet({ content: content, mediaList: mediaList })
             .then(_res => {
                 setShowModal(false)
-                hasNext.current = true
                 setCurrent(1)
             })
             .catch(e => errorToast(e.message || '推文发送失败'))
     }
     // 到达设定的视图位置时加载下一页
-    const onEndReached = (info: { distanceFromEnd: number }) => {
-        console.log('onEndReached: ', info.distanceFromEnd)
-        if (info.distanceFromEnd < 0) {
-            // 避免第一次进页面时，直接到达了底部，会触发两次useEffect
-            return
+    const onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
+        console.log('onEndReached: ', distanceFromEnd)
+        // if (distanceFromEnd < 0) {
+        //     // 避免第一次进页面时，直接到达了底部，会触发两次useEffect
+        //     return
+        // }
+        if (!reached) {
+            setCurrent(current + 1)
+            setReached(true)
         }
-        setCurrent(current + 1)
     }
     // 每个Fleet的分隔线
     const separator = () => <View style={styles.separator} />
@@ -126,6 +117,7 @@ export const HomePage = () => {
                 onEndReachedThreshold={0.2}
                 onEndReached={onEndReached}
                 ListEmptyComponent={emptyScreen}
+                onMomentumScrollBegin={() => setReached(false)}
             />
             <TouchableOpacity onPress={() => setShowModal(true)}>
                 <View style={styles.floatActionButton}>

@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons'
+import { AuthContext } from '@Utils/context'
 import { errorToast } from '@Utils/utils'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import {
     Image,
     KeyboardAvoidingView,
@@ -23,6 +24,7 @@ interface Callback {
  */
 export const Twitter = ({ close, send }: Callback) => {
     const [content, setContent] = useState('')
+    const context = useContext(AuthContext)
     const publishFleet = () => {
         if (!content) {
             errorToast('请输入推文')
@@ -57,7 +59,7 @@ export const Twitter = ({ close, send }: Callback) => {
                         <View style={{ flex: 1, marginTop: 10 }}>
                             <Image
                                 source={{
-                                    uri: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+                                    uri: context?.avatar
                                 }}
                                 style={styles.avatar}
                             />

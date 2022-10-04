@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { addFleet, fleetPage } from '@Network/api/fleet'
 import { colors } from '@Styles/colors'
 import { errorToast } from '@Utils/utils'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
     FlatList,
     Modal,
@@ -12,7 +12,6 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import { PageQuery } from 'types'
 import { Fleet } from './components/Fleet'
 import { Twitter } from './components/Twitter'
 import { FleetProps, Media } from './components/types'
@@ -24,33 +23,36 @@ export const HomePage = () => {
     // 推文列表
     const [fleetList, setFleetList] = useState<FleetProps[]>([])
     // 分页参数
-    const [query, setQuery] = useState<PageQuery>({
-        size: 10,
-        current: 1
-    })
-    // 列表是否以到底
-    const [end, setEnd] = useState(false)
-    // effect
-    useEffect(() => loadFleet(), [query])
-    // 下拉刷新Fleet
-    const onRefresh = useCallback(() => {
-        setQuery({ current: 1, size: query.size })
-    }, [refreshing])
+    const [current, setCurrent] = useState(1)
+    const [size, setSize] = useState(10)
+    // 是否有下一页
+    const hasNext = useRef(true)
+    useEffect(() => {
+        console.log('============useEffect============')
+        loadFleet()
+    }, [current])
     // 加载Fleet
-    const loadFleet = () => {
-        setRefreshing(true)
-        fleetPage(query)
+    const loadFleet = async () => {
+        if (!hasNext.current) {
+            return
+        }
+        console.log('Start load flees...')
+
+        fleetPage({
+            size: size,
+            current: current,
+            descs: 'create_time'
+        })
             .then(res => {
-                if (query.current === 1) {
+                if (res.data.current === 1) {
                     setFleetList(res.data.records)
-                    setEnd(false)
                 } else {
                     setFleetList(fleetList.concat(res.data.records))
                 }
-                if (res.data.records.length === 0) {
-                    setEnd(true)
+                if (res.data.pages === res.data.current) {
+                    hasNext.current = false
                 } else {
-                    setEnd(false)
+                    hasNext.current = true
                 }
                 setRefreshing(false)
             })
@@ -59,27 +61,36 @@ export const HomePage = () => {
                 setRefreshing(false)
             })
     }
-    // 每个Fleet的分隔线
-    const separator = () => <View style={styles.separator} />
-    // 渲染每个Fleet
-    const renderFleet = (fleetProps: any) => <Fleet {...fleetProps} />
+    // 下拉刷新Fleet
+    const onRefresh = () => {
+        hasNext.current = true
+        setRefreshing(true)
+        setCurrent(1)
+    }
     // 发推
     const sendFleet = (content: string, mediaList?: Media[]) => {
         addFleet({ content: content, mediaList: mediaList })
             .then(_res => {
                 setShowModal(false)
-                loadFleet()
+                hasNext.current = true
+                setCurrent(1)
             })
             .catch(e => errorToast(e.message || '推文发送失败'))
     }
-    const onEndReached = (_info: { distanceFromEnd: number }) => {
-        if (!end) {
-            setQuery({
-                current: query.current + 1,
-                size: query.size
-            })
+    // 到达设定的视图位置时加载下一页
+    const onEndReached = (info: { distanceFromEnd: number }) => {
+        console.log('onEndReached: ', info.distanceFromEnd)
+        if (info.distanceFromEnd < 0) {
+            // 避免第一次进页面时，直接到达了底部，会触发两次useEffect
+            return
         }
+        setCurrent(current + 1)
     }
+    // 每个Fleet的分隔线
+    const separator = () => <View style={styles.separator} />
+    // 渲染每个Fleet
+    const renderFleet = (fleetProps: any) => <Fleet {...fleetProps} />
+    // 空屏
     const emptyScreen = () => {
         return (
             <View
@@ -108,13 +119,12 @@ export const HomePage = () => {
                 data={fleetList}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => renderFleet(item)}
-                initialNumToRender={10}
+                initialNumToRender={size}
                 ItemSeparatorComponent={separator}
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 onEndReachedThreshold={0.2}
                 onEndReached={onEndReached}
-                removeClippedSubviews={true}
                 ListEmptyComponent={emptyScreen}
             />
             <TouchableOpacity onPress={() => setShowModal(true)}>

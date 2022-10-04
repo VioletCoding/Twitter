@@ -8,7 +8,10 @@ import {
 } from '@react-navigation/bottom-tabs'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { getAuthToken, setAuthToken } from '@Storage/index'
+import { AuthTokenType } from '@Storage/types'
 import { colors } from '@Styles/colors'
+import { AuthContext } from '@Utils/context'
+import { createContext, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
 import { HomePage } from './home/HomePage'
 import { MailPage } from './mail/MailPage'
@@ -17,9 +20,14 @@ import { SearchPage } from './search/SearchPage'
 const Tab = createBottomTabNavigator()
 export const TabBar = () => {
     const navigation = useNavigation()
-    setInterval(async () => {
-        const token = await getAuthToken()
-        refreshToken(token?.refresh_token || '')
+    const [auth, setAuth] = useState<AuthTokenType | null>(null)
+    const bootstrapAuth = async () => {
+        const auth = await getAuthToken()
+        setAuth(auth)
+    }
+    bootstrapAuth()
+    setInterval(() => {
+        refreshToken(auth?.refresh_token || '')
             .then(res => {
                 if (res.access_token) {
                     setAuthToken(res)
@@ -59,69 +67,73 @@ export const TabBar = () => {
         )
     }
     return (
-        <Tab.Navigator
-            initialRouteName='Home'
-            screenOptions={screenOptions}
-        >
-            <Tab.Screen
-                name='Home'
-                component={HomePage}
-                options={{
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <Ionicons
-                            name={focused ? 'home' : 'home-outline'}
-                            size={size}
-                            color={color}
-                        />
-                    )
-                }}
-            />
-            <Tab.Screen
-                name='Search'
-                component={SearchPage}
-                options={{
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <Ionicons
-                            name={focused ? 'search' : 'search-outline'}
-                            size={size}
-                            color={color}
-                        />
-                    )
-                }}
-            />
-            <Tab.Screen
-                name='Notifications'
-                component={NotificationPage}
-                options={{
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <Ionicons
-                            name={
-                                focused
-                                    ? 'notifications-sharp'
-                                    : 'notifications-outline'
-                            }
-                            size={size}
-                            color={color}
-                        />
-                    )
-                }}
-            />
-            <Tab.Screen
-                name='Mail'
-                component={MailPage}
-                options={{
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <Ionicons
-                            name={
-                                focused ? 'ios-mail-sharp' : 'ios-mail-outline'
-                            }
-                            size={size}
-                            color={color}
-                        />
-                    )
-                }}
-            />
-        </Tab.Navigator>
+        <AuthContext.Provider value={auth}>
+            <Tab.Navigator
+                initialRouteName='Home'
+                screenOptions={screenOptions}
+            >
+                <Tab.Screen
+                    name='Home'
+                    component={HomePage}
+                    options={{
+                        tabBarIcon: ({ focused, color, size }) => (
+                            <Ionicons
+                                name={focused ? 'home' : 'home-outline'}
+                                size={size}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+                <Tab.Screen
+                    name='Search'
+                    component={SearchPage}
+                    options={{
+                        tabBarIcon: ({ focused, color, size }) => (
+                            <Ionicons
+                                name={focused ? 'search' : 'search-outline'}
+                                size={size}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+                <Tab.Screen
+                    name='Notifications'
+                    component={NotificationPage}
+                    options={{
+                        tabBarIcon: ({ focused, color, size }) => (
+                            <Ionicons
+                                name={
+                                    focused
+                                        ? 'notifications-sharp'
+                                        : 'notifications-outline'
+                                }
+                                size={size}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+                <Tab.Screen
+                    name='Mail'
+                    component={MailPage}
+                    options={{
+                        tabBarIcon: ({ focused, color, size }) => (
+                            <Ionicons
+                                name={
+                                    focused
+                                        ? 'ios-mail-sharp'
+                                        : 'ios-mail-outline'
+                                }
+                                size={size}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+            </Tab.Navigator>
+        </AuthContext.Provider>
     )
 }
 

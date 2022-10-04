@@ -3,7 +3,7 @@ import { passwordLogin } from '@Network/api/account'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { setAuthToken } from '@Storage/index'
 import { colors } from '@Styles/colors'
-import { errorToast, successToast } from '@Utils/utils'
+import { errorToast } from '@Utils/utils'
 import React, { useState } from 'react'
 import {
     SafeAreaView,
@@ -23,7 +23,6 @@ export const LoginPage = () => {
                 if (!res.error_code && res.access_token) {
                     await setAuthToken(res)
                     navigation.dispatch(StackActions.replace('TabBar'))
-                    successToast('欢迎回来')
                 } else {
                     errorToast(res.error_description)
                 }

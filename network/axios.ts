@@ -18,14 +18,14 @@ instance.interceptors.request.use(
             'Blade-Auth': `${token?.token_type} ${token?.access_token}` || '',
             'User-Type': 'app'
         }
-        console.log(`\n
-        Request Start: ======\n
-        Request URI: ${config.baseURL}${config.url} \n 
-        Method: ${config.method} \n 
-        Data: ${JSON.stringify(config.data)} \n 
-        Param: ${JSON.stringify(config.params)} \n 
-        Header: ${JSON.stringify(config.headers)} \n
-        Request End: ======`)
+        // console.log(`\n
+        // Request Start: ======\n
+        // Request URI: ${config.baseURL}${config.url} \n 
+        // Method: ${config.method} \n 
+        // Data: ${JSON.stringify(config.data)} \n 
+        // Param: ${JSON.stringify(config.params)} \n 
+        // Header: ${JSON.stringify(config.headers)} \n
+        // Request End: ======`)
         return config
     },
     (error) => {
@@ -35,11 +35,11 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
     (resp) => {
-        console.log(`\n
-        Response Start: ======\n
-        Data: ${JSON.stringify(resp.data)} \n
-        HTTP STATUS: ${resp.status} \n
-        Response End: ======`)
+        // console.log(`\n
+        // Response Start: ======\n
+        // Data: ${JSON.stringify(resp.data)} \n
+        // HTTP STATUS: ${resp.status} \n
+        // Response End: ======`)
 
         const status = resp.status || resp.data.code
         const message = resp.data.msg || resp.data.error_description || '发生了错误，请稍后再试'

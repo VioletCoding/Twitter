@@ -34,12 +34,11 @@ export const HomePage = () => {
     useEffect(() => loadFleet(), [query])
     // 下拉刷新Fleet
     const onRefresh = useCallback(() => {
-        setRefreshing(true)
         setQuery({ current: 1, size: query.size })
-        setRefreshing(false)
     }, [refreshing])
     // 加载Fleet
     const loadFleet = () => {
+        setRefreshing(true)
         fleetPage(query)
             .then(res => {
                 if (query.current === 1) {
@@ -53,8 +52,12 @@ export const HomePage = () => {
                 } else {
                     setEnd(false)
                 }
+                setRefreshing(false)
             })
-            .catch(() => errorToast('加载推文列表失败'))
+            .catch(() => {
+                errorToast('加载推文列表失败')
+                setRefreshing(false)
+            })
     }
     // 每个Fleet的分隔线
     const separator = () => <View style={styles.separator} />
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
         height: 60,
         backgroundColor: colors.sky['500'],
         position: 'absolute',
-        bottom: 10,
+        bottom: 50,
         right: 10,
         borderRadius: 1000,
         zIndex: 10,

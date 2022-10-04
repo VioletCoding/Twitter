@@ -3,6 +3,8 @@ import { errorToast } from '@Utils/utils'
 import { useState } from 'react'
 import {
     Image,
+    KeyboardAvoidingView,
+    Platform,
     SafeAreaView,
     StyleSheet,
     Text,
@@ -30,69 +32,77 @@ export const Twitter = ({ close, send }: Callback) => {
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            {/* 顶部 */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={close}>
-                    <Text style={styles.cancel}>取消</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={publishFleet}>
-                    <View style={styles.twitterBtn}>
-                        <Text style={styles.twitterBtnText}>发推</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+            >
+                {/* 顶部 */}
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        onPress={close}
+                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    >
+                        <Text style={styles.cancel}>取消</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={publishFleet}>
+                        <View style={styles.twitterBtn}>
+                            <Text style={styles.twitterBtnText}>发推</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
 
-            {/* 正文 */}
-            <View style={styles.mainBody}>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <View style={{ flex: 1, marginTop: 10 }}>
-                        <Image
-                            source={{
-                                uri: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
-                            }}
-                            style={styles.avatar}
-                        />
+                {/* 正文 */}
+                <View style={styles.mainBody}>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                        <View style={{ flex: 1, marginTop: 10 }}>
+                            <Image
+                                source={{
+                                    uri: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+                                }}
+                                style={styles.avatar}
+                            />
+                        </View>
+                        <View style={styles.contentView}>
+                            <TextInput
+                                value={content}
+                                onChangeText={setContent}
+                                textAlign='left'
+                                placeholder='有什么新鲜事？'
+                                autoFocus={true}
+                                placeholderTextColor={colors.slate['400']}
+                                textAlignVertical='top'
+                                multiline={true}
+                                style={styles.contentInput}
+                            />
+                        </View>
                     </View>
-                    <View style={styles.contentView}>
-                        <TextInput
-                            value={content}
-                            onChangeText={setContent}
-                            textAlign='left'
-                            placeholder='有什么新鲜事？'
-                            autoFocus={true}
-                            placeholderTextColor={colors.slate['400']}
-                            textAlignVertical='top'
-                            multiline={true}
-                            style={styles.contentInput}
-                        />
+                    <View style={styles.bottomOps}>
+                        <TouchableOpacity>
+                            <Ionicons
+                                name='radio-outline'
+                                size={24}
+                                color={colors.sky['500']}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Ionicons
+                                name='image-outline'
+                                size={24}
+                                color={colors.sky['500']}
+                                style={{ marginLeft: 30 }}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Ionicons
+                                name='location-outline'
+                                size={24}
+                                color={colors.sky['500']}
+                                style={{ marginLeft: 30 }}
+                            />
+                        </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.bottomOps}>
-                    <TouchableOpacity>
-                        <Ionicons
-                            name='radio-outline'
-                            size={24}
-                            color={colors.sky['500']}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Ionicons
-                            name='image-outline'
-                            size={24}
-                            color={colors.sky['500']}
-                            style={{ marginLeft: 30 }}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Ionicons
-                            name='location-outline'
-                            size={24}
-                            color={colors.sky['500']}
-                            style={{ marginLeft: 30 }}
-                        />
-                    </TouchableOpacity>
-                </View>
-            </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }
@@ -111,7 +121,7 @@ const styles = StyleSheet.create({
     },
     twitterBtn: {
         width: 70,
-        height: 40,
+        height: 35,
         backgroundColor: colors.sky['500'],
         alignItems: 'center',
         justifyContent: 'center',

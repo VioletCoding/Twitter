@@ -37,8 +37,7 @@ export const HomePage = () => {
             setRefreshing(false)
             return
         }
-        console.log('Start load flees...')
-
+        console.log('Start load fleets...')
         fleetPage({
             size: size,
             current: current,

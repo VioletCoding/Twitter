@@ -34,6 +34,7 @@ export const HomePage = () => {
     // 加载Fleet
     const loadFleet = async () => {
         if (!hasNext.current) {
+            setRefreshing(false)
             return
         }
         console.log('Start load flees...')

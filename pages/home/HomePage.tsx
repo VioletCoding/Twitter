@@ -8,6 +8,7 @@ import {
     Modal,
     SafeAreaView,
     StyleSheet,
+    Text,
     TouchableOpacity,
     View
 } from 'react-native'
@@ -76,6 +77,27 @@ export const HomePage = () => {
             })
         }
     }
+    const emptyScreen = () => {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    marginTop: 50
+                }}
+            >
+                <Text
+                    style={{
+                        fontSize: 24,
+                        fontWeight: 'bold',
+                        color: colors.slate['500']
+                    }}
+                >
+                    这里什么都还没有
+                </Text>
+            </View>
+        )
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -90,6 +112,7 @@ export const HomePage = () => {
                 onEndReachedThreshold={0.2}
                 onEndReached={onEndReached}
                 removeClippedSubviews={true}
+                ListEmptyComponent={emptyScreen}
             />
             <TouchableOpacity onPress={() => setShowModal(true)}>
                 <View style={styles.floatActionButton}>

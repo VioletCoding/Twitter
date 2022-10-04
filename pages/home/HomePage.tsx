@@ -24,7 +24,7 @@ export const HomePage = () => {
     const [fleetList, setFleetList] = useState<FleetProps[]>([])
     // 分页参数
     const [current, setCurrent] = useState(1)
-    const [size, setSize] = useState(10)
+    const size = 10
     // 是否有下一页
     const hasNext = useRef(true)
     useEffect(() => {

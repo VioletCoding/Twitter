@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons'
 import { addFleet, fleetPage } from '@Network/api/fleet'
 import { colors } from '@Styles/colors'
-import { errorToast, successToast } from '@Utils/utils'
+import { errorToast } from '@Utils/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
     FlatList,
@@ -27,19 +27,31 @@ export const HomePage = () => {
         size: 10,
         current: 1
     })
+    // 列表是否以到底
+    const [end, setEnd] = useState(false)
     // effect
     useEffect(() => loadFleet(), [query])
     // 下拉刷新Fleet
     const onRefresh = useCallback(() => {
         setRefreshing(true)
-        loadFleet()
+        setQuery({ current: 1, size: query.size })
         setRefreshing(false)
     }, [refreshing])
     // 加载Fleet
     const loadFleet = () => {
         fleetPage(query)
             .then(res => {
-                setFleetList(res.data.records)
+                if (query.current === 1) {
+                    setFleetList(res.data.records)
+                    setEnd(false)
+                } else {
+                    setFleetList(fleetList.concat(res.data.records))
+                }
+                if (res.data.records.length === 0) {
+                    setEnd(true)
+                } else {
+                    setEnd(false)
+                }
             })
             .catch(() => errorToast('加载推文列表失败'))
     }
@@ -50,16 +62,19 @@ export const HomePage = () => {
     // 发推
     const sendFleet = (content: string, mediaList?: Media[]) => {
         addFleet({ content: content, mediaList: mediaList })
-            .then(res => {
-                if (res.success) {
-                    successToast('已发送推文')
-                } else {
-                    errorToast(res.msg || '推文发送失败')
-                }
+            .then(_res => {
                 setShowModal(false)
                 loadFleet()
             })
             .catch(e => errorToast(e.message || '推文发送失败'))
+    }
+    const onEndReached = (_info: { distanceFromEnd: number }) => {
+        if (!end) {
+            setQuery({
+                current: query.current + 1,
+                size: query.size
+            })
+        }
     }
 
     return (
@@ -72,12 +87,11 @@ export const HomePage = () => {
                 ItemSeparatorComponent={separator}
                 refreshing={refreshing}
                 onRefresh={onRefresh}
+                onEndReachedThreshold={0.2}
+                onEndReached={onEndReached}
+                removeClippedSubviews={true}
             />
-            <TouchableOpacity
-                onPress={() => {
-                    setShowModal(true)
-                }}
-            >
+            <TouchableOpacity onPress={() => setShowModal(true)}>
                 <View style={styles.floatActionButton}>
                     <Ionicons
                         name='add-sharp'

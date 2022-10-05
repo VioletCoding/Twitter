@@ -1,3 +1,4 @@
+import { EmptyScreen } from '@Components/EmptyScreen'
 import { Ionicons } from '@expo/vector-icons'
 import { addFleet, fleetPage } from '@Network/api/fleet'
 import { colors } from '@Styles/colors'
@@ -8,7 +9,6 @@ import {
     Modal,
     SafeAreaView,
     StyleSheet,
-    Text,
     TouchableOpacity,
     View
 } from 'react-native'
@@ -27,7 +27,6 @@ export const HomePage = () => {
     const [reached, setReached] = useState(true)
     const size = 10
     useEffect(() => {
-        console.log('============useEffect============')
         loadFleet()
     }, [current])
     // 加载Fleet
@@ -58,7 +57,7 @@ export const HomePage = () => {
     }
     // 发推
     const sendFleet = (content: string, mediaList?: Media[]) => {
-        addFleet({ content: content, mediaList: mediaList })
+        addFleet({ content, mediaList })
             .then(_res => {
                 setShowModal(false)
                 setCurrent(1)
@@ -81,28 +80,6 @@ export const HomePage = () => {
     const separator = () => <View style={styles.separator} />
     // 渲染每个Fleet
     const renderFleet = (fleetProps: any) => <Fleet {...fleetProps} />
-    // 空屏
-    const emptyScreen = () => {
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    marginTop: 50
-                }}
-            >
-                <Text
-                    style={{
-                        fontSize: 24,
-                        fontWeight: 'bold',
-                        color: colors.slate['500']
-                    }}
-                >
-                    这里什么都还没有
-                </Text>
-            </View>
-        )
-    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -116,7 +93,7 @@ export const HomePage = () => {
                 onRefresh={onRefresh}
                 onEndReachedThreshold={0.2}
                 onEndReached={onEndReached}
-                ListEmptyComponent={emptyScreen}
+                ListEmptyComponent={() => EmptyScreen('这里什么都还没有')}
                 onMomentumScrollBegin={() => setReached(false)}
                 removeClippedSubviews={true}
             />

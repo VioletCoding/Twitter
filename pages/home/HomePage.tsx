@@ -68,10 +68,10 @@ export const HomePage = () => {
     // 到达设定的视图位置时加载下一页
     const onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
         console.log('onEndReached: ', distanceFromEnd)
-        // if (distanceFromEnd < 0) {
-        //     // 避免第一次进页面时，直接到达了底部，会触发两次useEffect
-        //     return
-        // }
+        if (distanceFromEnd < 0) {
+            // 避免第一次进页面时，直接到达了底部，会触发两次useEffect
+            return
+        }
         if (!reached) {
             setCurrent(current + 1)
             setReached(true)
@@ -118,6 +118,7 @@ export const HomePage = () => {
                 onEndReached={onEndReached}
                 ListEmptyComponent={emptyScreen}
                 onMomentumScrollBegin={() => setReached(false)}
+                removeClippedSubviews={true}
             />
             <TouchableOpacity onPress={() => setShowModal(true)}>
                 <View style={styles.floatActionButton}>

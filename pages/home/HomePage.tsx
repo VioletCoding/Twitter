@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { addFleet, fleetPage, likeOrNot } from '@Network/api/fleet'
 import { colors } from '@Styles/colors'
 import { errorToast } from '@Utils/utils'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import {
     FlatList,
     Modal,
@@ -19,24 +19,20 @@ export const HomePage = () => {
     // 下拉刷新状态
     const refreshing = useRef(false)
     // 发推Modal显隐
-    const showModal = useRef(false)
+    const [showModal, setShowModal] = useState(false)
     const reached = useRef(true)
     // 推文列表
     const [fleetList, setFleetList] = useState<FleetProps[]>([])
     // 分页参数
-    const [current, setCurrent] = useState(1)
-    const size = 10
-    useEffect(() => {
-        console.log('======useEffect======')
-        loadFleet(current)
-        reached.current = true
-    }, [current])
+    const current = useRef(1)
+    const size = useRef(10)
+    const initd = useRef(false)
     // 加载Fleet
-    const loadFleet = async (current: number) => {
+    const loadFleet = async () => {
         console.log('Start load fleets...')
         await fleetPage({
-            size: size,
-            current: current,
+            size: size.current,
+            current: current.current,
             descs: 'create_time'
         })
             .then(res => {
@@ -51,16 +47,22 @@ export const HomePage = () => {
             })
         refreshing.current = false
     }
+    if (!initd.current) {
+        loadFleet()
+        initd.current = true
+    }
     // 下拉刷新Fleet
     const onRefresh = () => {
-        setCurrent(1)
+        current.current = 1
+        loadFleet()
     }
     // 发推
     const sendFleet = (content: string, mediaList?: Media[]) => {
         addFleet({ content, mediaList })
             .then(_res => {
-                showModal.current = false
-                setCurrent(1)
+                setShowModal(false)
+                current.current = 1
+                loadFleet()
             })
             .catch(e => errorToast(e.message || '推文发送失败'))
     }
@@ -68,10 +70,10 @@ export const HomePage = () => {
     const onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
         console.log('onEndReached: ', distanceFromEnd)
         if (distanceFromEnd < 0 || reached.current) {
-            // 避免第一次进页面时，直接到达了底部，会触发两次useEffect
             return
         }
-        setCurrent(current + 1)
+        current.current++
+        loadFleet()
     }
     // 每个Fleet的分隔线
     const separator = () => <View style={styles.separator} />
@@ -100,7 +102,7 @@ export const HomePage = () => {
                 data={fleetList}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => renderFleet(item)}
-                initialNumToRender={size}
+                initialNumToRender={size.current}
                 ItemSeparatorComponent={separator}
                 refreshing={refreshing.current}
                 onRefresh={onRefresh}
@@ -110,7 +112,7 @@ export const HomePage = () => {
                 onMomentumScrollBegin={() => (reached.current = false)}
                 removeClippedSubviews={true}
             />
-            <TouchableOpacity onPress={() => (showModal.current = true)}>
+            <TouchableOpacity onPress={() => setShowModal(true)}>
                 <View style={styles.floatActionButton}>
                     <Ionicons
                         name='add-sharp'
@@ -120,11 +122,11 @@ export const HomePage = () => {
                 </View>
             </TouchableOpacity>
             <Modal
-                visible={showModal.current}
+                visible={showModal}
                 animationType='slide'
             >
                 <Twitter
-                    close={() => (showModal.current = true)}
+                    close={() => setShowModal(false)}
                     send={sendFleet}
                 />
             </Modal>

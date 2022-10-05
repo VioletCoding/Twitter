@@ -89,7 +89,6 @@ export const HomePage = () => {
             }}
             onComment={item => {}}
             onPressAvatar={item => {}}
-            onPressFleet={item => {}}
             onPressMore={item => {}}
             onShare={item => {}}
             onRetweet={item => {}}
@@ -106,7 +105,7 @@ export const HomePage = () => {
                 ItemSeparatorComponent={separator}
                 refreshing={refreshing.current}
                 onRefresh={onRefresh}
-                onEndReachedThreshold={0.3}
+                onEndReachedThreshold={0.5}
                 onEndReached={onEndReached}
                 ListEmptyComponent={() => EmptyScreen('这里什么都还没有')}
                 onMomentumScrollBegin={() => (reached.current = false)}

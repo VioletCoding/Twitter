@@ -60,8 +60,20 @@ export const Fleet = (props: Callback) => {
                 {/* 个人信息 */}
                 <View style={styles.userInfo}>
                     <View style={styles.header}>
-                        <Text style={styles.nickname}>{fleet.nickname}</Text>
-                        <Text style={styles.username}>{fleet.username}</Text>
+                        <Text
+                            style={styles.nickname}
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
+                        >
+                            {fleet.nickname}
+                        </Text>
+                        <Text
+                            style={styles.username}
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
+                        >
+                            {fleet.username}
+                        </Text>
                     </View>
                     <TouchableOpacity>
                         <Ionicons

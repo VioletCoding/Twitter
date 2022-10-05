@@ -16,13 +16,14 @@ import { Fleet } from './components/Fleet'
 import { Twitter } from './components/Twitter'
 import { FleetProps, Media } from './components/types'
 export const HomePage = () => {
-    // 下拉刷新状态
-    const refreshing = useRef(false)
     // 发推Modal显隐
     const [showModal, setShowModal] = useState(false)
-    const reached = useRef(true)
     // 推文列表
     const [fleetList, setFleetList] = useState<FleetProps[]>([])
+    // 下拉刷新状态
+    const refreshing = useRef(false)
+    // 是否以到底底部，作为一个锁定功能，防止重复触发
+    const reached = useRef(true)
     // 分页参数
     const current = useRef(1)
     const size = useRef(10)
@@ -61,15 +62,13 @@ export const HomePage = () => {
         addFleet({ content, mediaList })
             .then(_res => {
                 setShowModal(false)
-                current.current = 1
-                loadFleet()
             })
             .catch(e => errorToast(e.message || '推文发送失败'))
     }
     // 到达设定的视图位置时加载下一页
     const onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
         console.log('onEndReached: ', distanceFromEnd)
-        if (distanceFromEnd < 0 || reached.current) {
+        if (distanceFromEnd > 0 && reached.current) {
             return
         }
         current.current++
@@ -85,7 +84,6 @@ export const HomePage = () => {
                 likeOrNot(item.id, like)
                     .then(() => {})
                     .catch(() => {})
-                item.liked = true
             }}
             onComment={item => {}}
             onPressAvatar={item => {}}
@@ -105,7 +103,7 @@ export const HomePage = () => {
                 ItemSeparatorComponent={separator}
                 refreshing={refreshing.current}
                 onRefresh={onRefresh}
-                onEndReachedThreshold={0.5}
+                onEndReachedThreshold={0.2}
                 onEndReached={onEndReached}
                 ListEmptyComponent={() => EmptyScreen('这里什么都还没有')}
                 onMomentumScrollBegin={() => (reached.current = false)}

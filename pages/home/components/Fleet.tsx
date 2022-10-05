@@ -68,7 +68,7 @@ export const Fleet = (props: FleetProps) => {
                     {fleetOperation(
                         <Ionicons
                             name='chatbubble-outline'
-                            size={24}
+                            size={20}
                             color={colors.slate['500']}
                         />,
                         props.comments
@@ -76,7 +76,7 @@ export const Fleet = (props: FleetProps) => {
                     {fleetOperation(
                         <AntDesign
                             name='retweet'
-                            size={24}
+                            size={20}
                             color={colors.slate['500']}
                         />,
                         props.retweet
@@ -84,7 +84,7 @@ export const Fleet = (props: FleetProps) => {
                     {fleetOperation(
                         <AntDesign
                             name='hearto'
-                            size={24}
+                            size={20}
                             color={colors.slate['500']}
                         />,
                         props.likes
@@ -92,7 +92,7 @@ export const Fleet = (props: FleetProps) => {
                     {fleetOperation(
                         <Ionicons
                             name='share-outline'
-                            size={24}
+                            size={20}
                             color={colors.slate['500']}
                         />
                     )}

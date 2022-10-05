@@ -28,3 +28,22 @@ export const fleetPage = (query: PageQuery, param?: any): Promise<any> => {
         params: { ...param, ...query }
     })
 }
+
+/**
+ * 喜欢/不喜欢
+ * @param userId 用户ID
+ * @param fleetId 推文ID
+ * @param like true喜欢，false不喜欢
+ * @returns Promise
+ */
+export const likeOrNot = (fleetId: string, like: boolean, userId?: string): Promise<any> => {
+    return axios({
+        method: 'get',
+        url: `twitter-api/fleetLikes/like/${fleetId}`,
+        params: {
+            fleetId,
+            likeOrNot: like,
+            userId
+        }
+    })
+}

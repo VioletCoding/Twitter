@@ -1,9 +1,9 @@
 import { EmptyScreen } from '@Components/EmptyScreen'
 import { Ionicons } from '@expo/vector-icons'
-import { addFleet, fleetPage } from '@Network/api/fleet'
+import { addFleet, fleetPage, likeOrNot } from '@Network/api/fleet'
 import { colors } from '@Styles/colors'
 import { errorToast } from '@Utils/utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
     FlatList,
     Modal,
@@ -17,22 +17,24 @@ import { Twitter } from './components/Twitter'
 import { FleetProps, Media } from './components/types'
 export const HomePage = () => {
     // 下拉刷新状态
-    const [refreshing, setRefreshing] = useState(false)
+    const refreshing = useRef(false)
     // 发推Modal显隐
-    const [showModal, setShowModal] = useState(false)
+    const showModal = useRef(false)
+    const reached = useRef(true)
     // 推文列表
     const [fleetList, setFleetList] = useState<FleetProps[]>([])
     // 分页参数
     const [current, setCurrent] = useState(1)
-    const [reached, setReached] = useState(true)
     const size = 10
     useEffect(() => {
-        loadFleet()
+        console.log('======useEffect======')
+        loadFleet(current)
+        reached.current = true
     }, [current])
     // 加载Fleet
-    const loadFleet = async () => {
+    const loadFleet = async (current: number) => {
         console.log('Start load fleets...')
-        fleetPage({
+        await fleetPage({
             size: size,
             current: current,
             descs: 'create_time'
@@ -43,23 +45,21 @@ export const HomePage = () => {
                 } else {
                     setFleetList(fleetList.concat(res.data.records))
                 }
-                setRefreshing(false)
             })
             .catch(() => {
                 errorToast('加载推文列表失败')
-                setRefreshing(false)
             })
+        refreshing.current = false
     }
     // 下拉刷新Fleet
     const onRefresh = () => {
-        setRefreshing(true)
         setCurrent(1)
     }
     // 发推
     const sendFleet = (content: string, mediaList?: Media[]) => {
         addFleet({ content, mediaList })
             .then(_res => {
-                setShowModal(false)
+                showModal.current = false
                 setCurrent(1)
             })
             .catch(e => errorToast(e.message || '推文发送失败'))
@@ -67,19 +67,32 @@ export const HomePage = () => {
     // 到达设定的视图位置时加载下一页
     const onEndReached = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
         console.log('onEndReached: ', distanceFromEnd)
-        if (distanceFromEnd < 0) {
+        if (distanceFromEnd < 0 || reached.current) {
             // 避免第一次进页面时，直接到达了底部，会触发两次useEffect
             return
         }
-        if (!reached) {
-            setCurrent(current + 1)
-            setReached(true)
-        }
+        setCurrent(current + 1)
     }
     // 每个Fleet的分隔线
     const separator = () => <View style={styles.separator} />
     // 渲染每个Fleet
-    const renderFleet = (fleetProps: any) => <Fleet {...fleetProps} />
+    const renderFleet = (fleetProps: any) => (
+        <Fleet
+            item={fleetProps}
+            onLike={(item, like) => {
+                likeOrNot(item.id, like)
+                    .then(() => {})
+                    .catch(() => {})
+                item.liked = true
+            }}
+            onComment={item => {}}
+            onPressAvatar={item => {}}
+            onPressFleet={item => {}}
+            onPressMore={item => {}}
+            onShare={item => {}}
+            onRetweet={item => {}}
+        />
+    )
 
     return (
         <SafeAreaView style={styles.container}>
@@ -89,15 +102,15 @@ export const HomePage = () => {
                 renderItem={({ item }) => renderFleet(item)}
                 initialNumToRender={size}
                 ItemSeparatorComponent={separator}
-                refreshing={refreshing}
+                refreshing={refreshing.current}
                 onRefresh={onRefresh}
-                onEndReachedThreshold={0.2}
+                onEndReachedThreshold={0.3}
                 onEndReached={onEndReached}
                 ListEmptyComponent={() => EmptyScreen('这里什么都还没有')}
-                onMomentumScrollBegin={() => setReached(false)}
+                onMomentumScrollBegin={() => (reached.current = false)}
                 removeClippedSubviews={true}
             />
-            <TouchableOpacity onPress={() => setShowModal(true)}>
+            <TouchableOpacity onPress={() => (showModal.current = true)}>
                 <View style={styles.floatActionButton}>
                     <Ionicons
                         name='add-sharp'
@@ -107,11 +120,11 @@ export const HomePage = () => {
                 </View>
             </TouchableOpacity>
             <Modal
-                visible={showModal}
+                visible={showModal.current}
                 animationType='slide'
             >
                 <Twitter
-                    close={() => setShowModal(false)}
+                    close={() => (showModal.current = true)}
                     send={sendFleet}
                 />
             </Modal>

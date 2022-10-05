@@ -6767,6 +6767,11 @@ use-sync-external-store@^1.0.0:
   resolved "https://registry.npmmirror.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
   integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
+use-update-effect@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/use-update-effect/-/use-update-effect-1.0.0.tgz#9bc3a28af95e3bbb65d7782541ab51a6db5bbab4"
+  integrity sha512-cL6onz27kAqH9woAzQSIrsrL3zHZgByZtXy9l0GPZZRLcqvqvVduh36LIurA+8zLT4i+3akgP5Sm42BqjMc99Q==
+
 use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.npmmirror.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"

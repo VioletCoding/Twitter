@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons'
 import { AuthContext } from '@Utils/context'
 import { errorToast } from '@Utils/utils'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
+    Image,
     KeyboardAvoidingView,
     Platform,
     SafeAreaView,
@@ -12,7 +13,6 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import { colors } from '../../../styles/colors'
 import { Media } from './types'
 interface Callback {
@@ -57,7 +57,7 @@ export const Twitter = ({ close, send }: Callback) => {
                 <View style={styles.mainBody}>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <View style={{ flex: 1, marginTop: 10 }}>
-                            <FastImage
+                            <Image
                                 source={{
                                     uri: context?.avatar
                                 }}

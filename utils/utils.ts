@@ -5,7 +5,7 @@ const _option: ToastOptions = {
     animation: true,
     keyboardAvoiding: true,
     position: Toast.positions.TOP,
-    duration: Toast.durations.LONG,
+    duration: Toast.durations.SHORT,
     shadow: true,
     hideOnPress: true,
     backgroundColor: colors.sky['50'],

@@ -1,17 +1,44 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons'
-import React from 'react'
+import React, { useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import useUpdateEffect from 'use-update-effect'
 import { colors } from '../../../styles/colors'
 import { FleetProps } from './types'
 /**
  * 每个Fleet
  * @param props FleetProps
  */
-export const Fleet = (props: FleetProps) => {
+export const Fleet = (props: {
+    item: FleetProps
+    onComment: (item: FleetProps) => void
+    onRetweet: (item: FleetProps) => void
+    onLike: (item: FleetProps, like: boolean) => void
+    onShare: (item: FleetProps) => void
+    onPressAvatar: (item: FleetProps) => void
+    onPressFleet: (item: FleetProps) => void
+    onPressMore: (item: FleetProps) => void
+}) => {
+    const [fleet, setFleet] = useState(props.item)
+    const [liked, setLiked] = useState(fleet.liked)
+    const [likes, setLikes] = useState(fleet.likes)
+    useUpdateEffect(() => {
+        let likeCount = likes
+        if (liked) {
+            likeCount++
+        } else {
+            likeCount--
+        }
+        if (likeCount > 0) {
+            setLikes(likeCount)
+        } else {
+            setLikes(0)
+        }
+        props.onLike(fleet, liked)
+    }, [liked])
     // 每个Fleet底部的操作按钮
-    const fleetOperation = (icon: any, count?: number) => {
+    const fleetOperation = (icon: any, count?: number, action?: () => void) => {
         return (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={action}>
                 <View style={styles.opsContainer}>
                     {icon}
                     <Text style={styles.opsText}>{count}</Text>
@@ -20,85 +47,97 @@ export const Fleet = (props: FleetProps) => {
         )
     }
     return (
-        <View style={styles.fleet}>
-            {/* 左侧头像 */}
-            <TouchableOpacity>
-                <Image
-                    source={{ uri: props.avatar }}
-                    style={styles.avatar}
-                />
-            </TouchableOpacity>
-            {/* 右侧Fleet主内容 */}
-            <View style={styles.main}>
-                {/* 个人信息 */}
-                <View style={styles.userInfo}>
-                    <View style={styles.header}>
-                        <Text style={styles.nickname}>{props.nickname}</Text>
-                        <Text style={styles.username}>{props.username}</Text>
+        <TouchableOpacity onPress={() => props.onPressFleet(fleet)}>
+            <View style={styles.fleet}>
+                {/* 左侧头像 */}
+                <TouchableOpacity>
+                    <Image
+                        source={{ uri: fleet.avatar }}
+                        style={styles.avatar}
+                    />
+                </TouchableOpacity>
+                {/* 右侧Fleet主内容 */}
+                <View style={styles.main}>
+                    {/* 个人信息 */}
+                    <View style={styles.userInfo}>
+                        <View style={styles.header}>
+                            <Text style={styles.nickname}>
+                                {fleet.nickname}
+                            </Text>
+                            <Text style={styles.username}>
+                                {fleet.username}
+                            </Text>
+                        </View>
+                        <TouchableOpacity>
+                            <Ionicons
+                                name='ios-ellipsis-horizontal'
+                                size={20}
+                                color={colors.slate['300']}
+                            />
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity>
-                        <Ionicons
-                            name='ios-ellipsis-horizontal'
-                            size={20}
-                            color={colors.slate['300']}
-                        />
-                    </TouchableOpacity>
-                </View>
-                {/* 正文 */}
-                <View style={styles.contentContainer}>
-                    <Text
-                        style={styles.content}
-                        numberOfLines={10}
-                    >
-                        {props.content}
-                    </Text>
-                </View>
-                {/* 正文媒体 */}
-                {props.mediaList &&
-                    props.mediaList.map(media => (
-                        // TODO 需要判断媒体类型
-                        <Image
-                            source={{ uri: media.source }}
-                            style={styles.imageMedia}
-                            key={media.id}
-                        />
-                    ))}
-                {/* 点赞、评论、转推等操作 */}
-                <View style={styles.ops}>
-                    {fleetOperation(
-                        <Ionicons
-                            name='chatbubble-outline'
-                            size={20}
-                            color={colors.slate['500']}
-                        />,
-                        props.comments
-                    )}
-                    {fleetOperation(
-                        <AntDesign
-                            name='retweet'
-                            size={20}
-                            color={colors.slate['500']}
-                        />,
-                        props.retweet
-                    )}
-                    {fleetOperation(
-                        <AntDesign
-                            name='hearto'
-                            size={20}
-                            color={colors.slate['500']}
-                        />,
-                        props.likes
-                    )}
-                    {fleetOperation(
-                        <Ionicons
-                            name='share-outline'
-                            size={20}
-                            color={colors.slate['500']}
-                        />
-                    )}
+                    {/* 正文 */}
+                    <View style={styles.contentContainer}>
+                        <Text
+                            style={styles.content}
+                            numberOfLines={10}
+                        >
+                            {fleet.content}
+                        </Text>
+                    </View>
+                    {/* 正文媒体 */}
+                    {fleet.mediaList &&
+                        fleet.mediaList.map(media => (
+                            // TODO 需要判断媒体类型
+                            <Image
+                                source={{ uri: media.source }}
+                                style={styles.imageMedia}
+                                key={media.id}
+                            />
+                        ))}
+                    {/* 点赞、评论、转推等操作 */}
+                    <View style={styles.ops}>
+                        {fleetOperation(
+                            <Ionicons
+                                name='chatbubble-outline'
+                                size={20}
+                                color={colors.slate['500']}
+                            />,
+
+                            fleet.comments
+                        )}
+                        {fleetOperation(
+                            <AntDesign
+                                name='retweet'
+                                size={20}
+                                color={colors.slate['500']}
+                            />,
+                            fleet.retweet
+                        )}
+                        {fleetOperation(
+                            <AntDesign
+                                name={liked ? 'heart' : 'hearto'}
+                                size={20}
+                                color={
+                                    liked
+                                        ? colors.red['400']
+                                        : colors.slate['400']
+                                }
+                            />,
+                            likes,
+                            () => setLiked(!liked)
+                        )}
+                        {fleetOperation(
+                            <Ionicons
+                                name='share-outline'
+                                size={20}
+                                color={colors.slate['500']}
+                            />
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

@@ -18,6 +18,8 @@ export interface FleetProps {
     comments: number,
     // 转推数
     retweet: number,
+    // 当前用户是否点赞了推文
+    liked: boolean,
     // 媒体文件
     mediaList?: Media[]
 }

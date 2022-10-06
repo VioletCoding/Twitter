@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import { AuthContext } from '@Utils/context'
+import * as ImagePicker from 'expo-image-picker'
 import React, { useContext, useRef, useState } from 'react'
 import {
     Image,
@@ -34,6 +35,16 @@ export const Twitter = ({ close, send }: Callback) => {
             return
         }
         send(content)
+    }
+    const pickImage = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            // allowsEditing: true,
+            quality: 1,
+            orderedSelection: true,
+            selectionLimit: 4,
+            allowsMultipleSelection: true
+        })
     }
     return (
         <RootSiblingParent>
@@ -96,7 +107,7 @@ export const Twitter = ({ close, send }: Callback) => {
                                     color={colors.sky['500']}
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={pickImage}>
                                 <Ionicons
                                     name='image-outline'
                                     size={24}

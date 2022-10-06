@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { upload } from '@Network/api/oss'
 import { AuthContext } from '@Utils/context'
 import * as ImagePicker from 'expo-image-picker'
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import {
     Image,
     KeyboardAvoidingView,
@@ -14,6 +14,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
+import { Col, Grid } from 'react-native-easy-grid'
 import { RootSiblingParent } from 'react-native-root-siblings'
 import { colors } from '../../../styles/colors'
 import { Media } from './types'
@@ -25,12 +26,41 @@ interface Callback {
  * 发推面板
  */
 export const Twitter = ({ close, send }: Callback) => {
+    // 已选文件
     const [pickFiles, setPickFiles] = useState<ImagePicker.ImageInfo[]>([])
+    // 推文内容
     const [content, setContent] = useState('')
+    // 登录信息
     const context = useContext(AuthContext)
+    // 组件引用
     const contentRef = useRef<TextInput>(null)
+    // 本条推文是否包含媒体内容
     const hasMedia = useRef(false)
+    // 媒体内容类型，只能同时存在一种类型
     const mediaType = useRef<ImagePicker.MediaTypeOptions | null>(null)
+    // 计算grid的高度
+    const gridMaxHeight = useMemo<number>(() => {
+        if (pickFiles.length > 0 && pickFiles.length <= 4) {
+            return 230
+        }
+        return 0
+    }, [pickFiles])
+    // 计算宫格显示的内容
+    const renderGird = useMemo(() => {
+        if (pickFiles.length === 0) {
+            return
+        }
+        return (
+            <Grid
+                style={{
+                    backgroundColor: colors.sky['400'],
+                    maxHeight: gridMaxHeight,
+                    borderRadius: 20
+                }}
+            ></Grid>
+        )
+    }, [pickFiles])
+    // 发推
     const publishFleet = async () => {
         if (!content) {
             if (contentRef.current) {
@@ -41,6 +71,7 @@ export const Twitter = ({ close, send }: Callback) => {
         await uploadPickFiles()
         send(content)
     }
+    // 上传媒体内容
     const uploadPickFiles = async (): Promise<Media[]> => {
         const resultList: Media[] = []
         if (pickFiles.length === 0) {
@@ -55,14 +86,12 @@ export const Twitter = ({ close, send }: Callback) => {
             })
             const response = await upload(data)
             if (response.success) {
-                const obj: Media = {
-                    ...response.data
-                }
-                resultList.push(obj)
+                resultList.push(...response.data)
             }
         }
         return resultList
     }
+    // 弹出图片选择器
     const pickImage = async (type: ImagePicker.MediaTypeOptions) => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: type,
@@ -72,7 +101,6 @@ export const Twitter = ({ close, send }: Callback) => {
             allowsMultipleSelection: true
         })
         console.log(result)
-
         if (!result.cancelled && result.selected.length > 0) {
             setPickFiles(result.selected)
             hasMedia.current = true
@@ -134,7 +162,8 @@ export const Twitter = ({ close, send }: Callback) => {
                                 />
                             </View>
                         </View>
-
+                        {/* 选择的图片 */}
+                        {pickFiles.length > 0 && renderGird}
                         <View style={styles.bottomOps}>
                             <TouchableOpacity>
                                 <Ionicons

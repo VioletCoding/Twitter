@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
+import { upload } from '@Network/api/oss'
 import { AuthContext } from '@Utils/context'
 import * as ImagePicker from 'expo-image-picker'
 import React, { useContext, useRef, useState } from 'react'
@@ -24,34 +25,68 @@ interface Callback {
  * 发推面板
  */
 export const Twitter = ({ close, send }: Callback) => {
+    const [pickFiles, setPickFiles] = useState<ImagePicker.ImageInfo[]>([])
     const [content, setContent] = useState('')
     const context = useContext(AuthContext)
     const contentRef = useRef<TextInput>(null)
-    const publishFleet = () => {
+    const hasMedia = useRef(false)
+    const mediaType = useRef<ImagePicker.MediaTypeOptions | null>(null)
+    const publishFleet = async () => {
         if (!content) {
             if (contentRef.current) {
                 contentRef.current.focus()
             }
             return
         }
+        await uploadPickFiles()
         send(content)
     }
-    const pickImage = async () => {
+    const uploadPickFiles = async (): Promise<Media[]> => {
+        const resultList: Media[] = []
+        if (pickFiles.length === 0) {
+            return resultList
+        }
+        for (const img of pickFiles) {
+            const data = new FormData()
+            data.append('file', {
+                uri: img.uri,
+                name: img.fileName,
+                type: 'image/png'
+            })
+            const response = await upload(data)
+            if (response.success) {
+                const obj: Media = {
+                    ...response.data
+                }
+                resultList.push(obj)
+            }
+        }
+        return resultList
+    }
+    const pickImage = async (type: ImagePicker.MediaTypeOptions) => {
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            // allowsEditing: true,
+            mediaTypes: type,
             quality: 1,
             orderedSelection: true,
             selectionLimit: 4,
             allowsMultipleSelection: true
         })
+        console.log(result)
+
+        if (!result.cancelled && result.selected.length > 0) {
+            setPickFiles(result.selected)
+            hasMedia.current = true
+            mediaType.current = type
+        } else if (result.cancelled && pickFiles.length === 0) {
+            hasMedia.current = false
+        }
     }
     return (
         <RootSiblingParent>
             <SafeAreaView style={{ flex: 1 }}>
                 <KeyboardAvoidingView
                     style={{ flex: 1 }}
-                    behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 >
                     {/* 顶部 */}
                     <View style={styles.header}>
@@ -99,6 +134,7 @@ export const Twitter = ({ close, send }: Callback) => {
                                 />
                             </View>
                         </View>
+
                         <View style={styles.bottomOps}>
                             <TouchableOpacity>
                                 <Ionicons
@@ -107,7 +143,13 @@ export const Twitter = ({ close, send }: Callback) => {
                                     color={colors.sky['500']}
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={pickImage}>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    pickImage(
+                                        ImagePicker.MediaTypeOptions.Images
+                                    )
+                                }
+                            >
                                 <Ionicons
                                     name='image-outline'
                                     size={24}

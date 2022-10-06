@@ -13,10 +13,12 @@ const instance = axios.create({
 instance.interceptors.request.use(
     async (config) => {
         const token = await getAuthToken()
+        const otherHeaders = config.headers
         config.headers = {
             'Authorization': 'Basic dHdpdHRlcjp0d2l0dGVyX3NlY3JldA==',
             'Blade-Auth': `${token?.token_type} ${token?.access_token}` || '',
-            'User-Type': 'app'
+            'User-Type': 'app',
+            ...otherHeaders
         }
         // console.log(`\n
         // Request Start: ======\n
@@ -29,6 +31,7 @@ instance.interceptors.request.use(
         return config
     },
     (error) => {
+        console.error(error.response)
         return Promise.reject(error)
     }
 )

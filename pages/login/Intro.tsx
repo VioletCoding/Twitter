@@ -1,3 +1,4 @@
+// @ts-ignored
 import logo from '@Assets/logo.jpg'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { colors } from '@Styles/colors'

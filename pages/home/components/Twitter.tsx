@@ -51,7 +51,7 @@ export const Twitter = ({ close, send }: Callback) => {
             data.append('file', {
                 uri: img.uri,
                 name: img.fileName,
-                type: 'image/png'
+                type: img.type === 'image' ? 'image/png' : 'video/mp4'
             })
             const response = await upload(data)
             if (response.success) {

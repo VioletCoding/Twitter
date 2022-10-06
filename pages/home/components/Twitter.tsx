@@ -57,7 +57,9 @@ export const Twitter = ({ close, send }: Callback) => {
                     maxHeight: gridMaxHeight,
                     borderRadius: 20
                 }}
-            ></Grid>
+            >
+                {/* TODO 不会写 */}
+            </Grid>
         )
     }, [pickFiles])
     // 发推

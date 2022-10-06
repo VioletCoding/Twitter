@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import { AuthContext } from '@Utils/context'
-import { errorToast } from '@Utils/utils'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import {
     Image,
     KeyboardAvoidingView,
@@ -13,6 +12,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
+import { RootSiblingParent } from 'react-native-root-siblings'
 import { colors } from '../../../styles/colors'
 import { Media } from './types'
 interface Callback {
@@ -25,87 +25,98 @@ interface Callback {
 export const Twitter = ({ close, send }: Callback) => {
     const [content, setContent] = useState('')
     const context = useContext(AuthContext)
+    const contentRef = useRef<TextInput>(null)
     const publishFleet = () => {
         if (!content) {
-            errorToast('请输入推文')
+            if (contentRef.current) {
+                contentRef.current.focus()
+            }
             return
         }
         send(content)
     }
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-            >
-                {/* 顶部 */}
-                <View style={styles.header}>
-                    <TouchableOpacity
-                        onPress={close}
-                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                    >
-                        <Text style={styles.cancel}>取消</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={publishFleet}>
-                        <View style={styles.twitterBtn}>
-                            <Text style={styles.twitterBtnText}>发推</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+        <RootSiblingParent>
+            <SafeAreaView style={{ flex: 1 }}>
+                <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+                >
+                    {/* 顶部 */}
+                    <View style={styles.header}>
+                        <TouchableOpacity
+                            onPress={close}
+                            hitSlop={{
+                                top: 10,
+                                bottom: 10,
+                                left: 10,
+                                right: 10
+                            }}
+                        >
+                            <Text style={styles.cancel}>取消</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={publishFleet}>
+                            <View style={styles.twitterBtn}>
+                                <Text style={styles.twitterBtnText}>发推</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
 
-                {/* 正文 */}
-                <View style={styles.mainBody}>
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <View style={{ flex: 1, marginTop: 10 }}>
-                            <Image
-                                source={{
-                                    uri: context?.avatar
-                                }}
-                                style={styles.avatar}
-                            />
+                    {/* 正文 */}
+                    <View style={styles.mainBody}>
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                            <View style={{ flex: 1, marginTop: 10 }}>
+                                <Image
+                                    source={{
+                                        uri: context?.avatar
+                                    }}
+                                    style={styles.avatar}
+                                />
+                            </View>
+                            <View style={styles.contentView}>
+                                <TextInput
+                                    ref={contentRef}
+                                    value={content}
+                                    onChangeText={setContent}
+                                    textAlign='left'
+                                    placeholder='有什么新鲜事？'
+                                    autoFocus={true}
+                                    placeholderTextColor={colors.slate['400']}
+                                    textAlignVertical='top'
+                                    multiline={true}
+                                    style={styles.contentInput}
+                                />
+                            </View>
                         </View>
-                        <View style={styles.contentView}>
-                            <TextInput
-                                value={content}
-                                onChangeText={setContent}
-                                textAlign='left'
-                                placeholder='有什么新鲜事？'
-                                autoFocus={true}
-                                placeholderTextColor={colors.slate['400']}
-                                textAlignVertical='top'
-                                multiline={true}
-                                style={styles.contentInput}
-                            />
+                        <View style={styles.bottomOps}>
+                            <TouchableOpacity>
+                                <Ionicons
+                                    name='radio-outline'
+                                    size={24}
+                                    color={colors.sky['500']}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <Ionicons
+                                    name='image-outline'
+                                    size={24}
+                                    color={colors.sky['500']}
+                                    style={{ marginLeft: 30 }}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <Ionicons
+                                    name='location-outline'
+                                    size={24}
+                                    color={colors.sky['500']}
+                                    style={{ marginLeft: 30 }}
+                                />
+                            </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.bottomOps}>
-                        <TouchableOpacity>
-                            <Ionicons
-                                name='radio-outline'
-                                size={24}
-                                color={colors.sky['500']}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Ionicons
-                                name='image-outline'
-                                size={24}
-                                color={colors.sky['500']}
-                                style={{ marginLeft: 30 }}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Ionicons
-                                name='location-outline'
-                                size={24}
-                                color={colors.sky['500']}
-                                style={{ marginLeft: 30 }}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+        </RootSiblingParent>
     )
 }
 

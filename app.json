@@ -1,39 +1,48 @@
 {
-  "expo": {
-    "name": "twitter",
-    "slug": "twitter",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.bayue.twitter"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "27bd70cc-fc72-47fa-884e-36d072552b4e"
-      }
+    "expo": {
+        "name": "twitter",
+        "slug": "twitter",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "userInterfaceStyle": "light",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": ["**/*"],
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#FFFFFF"
+            },
+            "package": "com.bayue.twitter"
+        },
+        "web": {
+            "favicon": "./assets/favicon.png"
+        },
+        "extra": {
+            "eas": {
+                "projectId": "27bd70cc-fc72-47fa-884e-36d072552b4e"
+            }
+        },
+
+        "plugins": [
+            [
+                "expo-image-picker",
+                {
+                    "photosPermission": "Allow Twitter to access your photos",
+                    "CameraUsageDescription": "Allow Twitter to access your camera",
+                    "microphonePermission": "Allow Twitter to access your microphone"
+                }
+            ]
+        ]
     }
-  }
 }

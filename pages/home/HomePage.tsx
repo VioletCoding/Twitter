@@ -118,9 +118,11 @@ export const HomePage = () => {
                     />
                 </View>
             </TouchableOpacity>
+
             <Modal
                 visible={showModal}
                 animationType='slide'
+                statusBarTranslucent={true}
             >
                 <Twitter
                     close={() => setShowModal(false)}

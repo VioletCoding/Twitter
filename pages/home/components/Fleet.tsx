@@ -5,12 +5,33 @@ import useUpdateEffect from 'use-update-effect'
 import { colors } from '../../../styles/colors'
 import { FleetProps } from './types'
 interface Callback {
+    /**
+     * The fleet props
+     */
     item: FleetProps
+    /**
+     * On press comment button
+     */
     onComment: (item: FleetProps) => void
+    /**
+     * On press retweet button
+     */
     onRetweet: (item: FleetProps) => void
+    /**
+     * On press like / unlike button
+     */
     onLike: (item: FleetProps, like: boolean) => void
+    /**
+     * On press share button
+     */
     onShare: (item: FleetProps) => void
+    /**
+     * On press fleet avatar
+     */
     onPressAvatar: (item: FleetProps) => void
+    /**
+     * On press more button
+     */
     onPressMore: (item: FleetProps) => void
 }
 /**
@@ -18,7 +39,7 @@ interface Callback {
  * @param props FleetProps
  */
 export const Fleet = (props: Callback) => {
-    const [fleet, setFleet] = useState(props.item)
+    const [fleet] = useState(props.item)
     const [liked, setLiked] = useState(fleet.liked)
     const [likes, setLikes] = useState(fleet.likes)
     useUpdateEffect(() => {
@@ -41,7 +62,7 @@ export const Fleet = (props: Callback) => {
             <TouchableOpacity onPress={action}>
                 <View style={styles.opsContainer}>
                     {icon}
-                    <Text style={styles.opsText}>{count}</Text>
+                    <Text style={styles.opsText}>{count || ''}</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -49,7 +70,7 @@ export const Fleet = (props: Callback) => {
     return (
         <View style={styles.fleet}>
             {/* 左侧头像 */}
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => props.onPressAvatar(fleet)}>
                 <Image
                     source={{ uri: fleet.avatar }}
                     style={styles.avatar}
@@ -75,7 +96,7 @@ export const Fleet = (props: Callback) => {
                             {fleet.username}
                         </Text>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => props.onPressMore(fleet)}>
                         <Ionicons
                             name='ios-ellipsis-horizontal'
                             size={20}
@@ -110,8 +131,8 @@ export const Fleet = (props: Callback) => {
                             size={20}
                             color={colors.slate['500']}
                         />,
-
-                        fleet.comments
+                        fleet.comments,
+                        () => props.onComment(fleet)
                     )}
                     {fleetOperation(
                         <AntDesign
@@ -119,7 +140,8 @@ export const Fleet = (props: Callback) => {
                             size={20}
                             color={colors.slate['500']}
                         />,
-                        fleet.retweet
+                        fleet.retweet,
+                        () => props.onRetweet(fleet)
                     )}
                     {fleetOperation(
                         <AntDesign
@@ -137,7 +159,9 @@ export const Fleet = (props: Callback) => {
                             name='share-outline'
                             size={20}
                             color={colors.slate['500']}
-                        />
+                        />,
+                        undefined,
+                        () => props.onShare(fleet)
                     )}
                 </View>
             </View>

@@ -7,7 +7,7 @@ import axios from "../axios"
 export const upload = (file: FormData): Promise<any> => {
     return axios({
         method: 'post',
-        url: 'twitter-api/oss/endpoint/put-file',
+        url: 'twitter-api/oss/endpoint/put-file-attach',
         headers: {
             'Content-Type': 'multipart/form-data'
         },

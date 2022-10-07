@@ -33,5 +33,7 @@ export interface Media {
     // 文件类型
     type: 'image' | 'video' | 'audio',
     // 文件链接
-    source: string
+    source: string,
+    // md5
+    md5: string
 }

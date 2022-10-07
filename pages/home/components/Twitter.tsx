@@ -4,6 +4,7 @@ import { AuthContext } from '@Utils/context'
 import * as ImagePicker from 'expo-image-picker'
 import React, { useContext, useMemo, useRef, useState } from 'react'
 import {
+    Dimensions,
     Image,
     KeyboardAvoidingView,
     Platform,
@@ -14,7 +15,6 @@ import {
     TouchableOpacity,
     View
 } from 'react-native'
-import { Col, Grid } from 'react-native-easy-grid'
 import { RootSiblingParent } from 'react-native-root-siblings'
 import { colors } from '../../../styles/colors'
 import { Media } from './types'
@@ -22,6 +22,7 @@ interface Callback {
     close: () => void
     send: (content: string, mediaList?: Media[]) => void
 }
+const { width, height } = Dimensions.get('window')
 /**
  * 发推面板
  */
@@ -38,30 +39,50 @@ export const Twitter = ({ close, send }: Callback) => {
     const hasMedia = useRef(false)
     // 媒体内容类型，只能同时存在一种类型
     const mediaType = useRef<ImagePicker.MediaTypeOptions | null>(null)
-    // 计算grid的高度
-    const gridMaxHeight = useMemo<number>(() => {
-        if (pickFiles.length > 0 && pickFiles.length <= 4) {
-            return 230
-        }
-        return 0
-    }, [pickFiles])
     // 计算宫格显示的内容
     const renderGird = useMemo(() => {
-        if (pickFiles.length === 0) {
+        const len = pickFiles.length
+        if (len === 0) {
             return
         }
+        const spacing = 5
+        let h = 220
+        let w = width - 30
+        if (len === 2) {
+            w = w / 2
+        } else if (len > 2) {
+            h = h / 2
+            w = w / 2
+        }
         return (
-            <Grid
+            <View
                 style={{
-                    backgroundColor: colors.sky['400'],
-                    maxHeight: gridMaxHeight,
-                    borderRadius: 20
+                    height: 230,
+                    maxHeight: 230,
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-around'
                 }}
             >
-                {/* TODO 不会写 */}
-            </Grid>
+                {pickFiles.map((file, index) => {
+                    return (
+                        <Image
+                            key={file.assetId}
+                            source={{ uri: file.uri }}
+                            style={{
+                                height: h,
+                                width: w,
+                                marginTop: index > 1 ? spacing : 0,
+                                borderRadius: 10
+                            }}
+                            resizeMode='cover'
+                        />
+                    )
+                })}
+            </View>
         )
     }, [pickFiles])
+
     // 发推
     const publishFleet = async () => {
         if (!content) {
@@ -70,8 +91,13 @@ export const Twitter = ({ close, send }: Callback) => {
             }
             return
         }
-        await uploadPickFiles()
-        send(content)
+        let response
+        try {
+            response = await uploadPickFiles()
+        } catch (e) {
+            console.error(e)
+        }
+        send(content, response)
     }
     // 上传媒体内容
     const uploadPickFiles = async (): Promise<Media[]> => {
@@ -84,11 +110,22 @@ export const Twitter = ({ close, send }: Callback) => {
             data.append('file', {
                 uri: img.uri,
                 name: img.fileName,
-                type: img.type === 'image' ? 'image/png' : 'video/mp4'
+                type: 'image/png'
             })
-            const response = await upload(data)
+            let response
+            try {
+                response = await upload(data)
+            } catch (e) {
+                console.error(e)
+            }
             if (response.success) {
-                resultList.push(...response.data)
+                const data = response.data
+                resultList.push({
+                    type: 'image',
+                    source: data.link,
+                    id: data.attachId,
+                    md5: data.md5
+                })
             }
         }
         return resultList

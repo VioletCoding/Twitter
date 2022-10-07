@@ -58,6 +58,7 @@ instance.interceptors.response.use(
         return resp.data
     },
     (error) => {
+        console.log(JSON.stringify(error))
         const msg = error.response.data.msg || '发生了错误，请稍后再试'
         errorToast(msg)
         return Promise.reject(msg)

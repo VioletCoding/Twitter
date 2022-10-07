@@ -1,9 +1,16 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+    Dimensions,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native'
 import useUpdateEffect from 'use-update-effect'
 import { colors } from '../../../styles/colors'
-import { FleetProps } from './types'
+import { FleetProps, Media } from './types'
 interface Callback {
     /**
      * The fleet props
@@ -38,10 +45,14 @@ interface Callback {
  * 每个Fleet
  * @param props FleetProps
  */
+const { width, height } = Dimensions.get('window')
 export const Fleet = (props: Callback) => {
     const [fleet] = useState(props.item)
     const [liked, setLiked] = useState(fleet.liked)
     const [likes, setLikes] = useState(fleet.likes)
+    const [mediaList] = useState<Media[]>(
+        fleet.attachJson ? JSON.parse(fleet.attachJson) : []
+    )
     useUpdateEffect(() => {
         let likeCount = likes
         if (liked) {
@@ -114,15 +125,35 @@ export const Fleet = (props: Callback) => {
                     </Text>
                 </View>
                 {/* 正文媒体 */}
-                {fleet.mediaList &&
-                    fleet.mediaList.map(media => (
-                        // TODO 需要判断媒体类型
-                        <Image
-                            source={{ uri: media.source }}
-                            style={styles.imageMedia}
-                            key={media.id}
-                        />
-                    ))}
+                {mediaList.length > 0 && (
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            marginTop: 5,
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            alignSelf: 'flex-start'
+                        }}
+                    >
+                        {mediaList.map((media, index) => (
+                            <Image
+                                source={{ uri: media.source }}
+                                style={{
+                                    width:
+                                        mediaList.length > 0 ? '49%' : '100%',
+                                    height: mediaList.length > 0 ? 100 : '100%',
+                                    borderRadius: 5,
+                                    marginTop: 5,
+                                    marginLeft: index % 2 === 0 ? 0 : 5
+                                }}
+                                key={media.id}
+                                resizeMode='cover'
+                            />
+                        ))}
+                    </View>
+                )}
                 {/* 点赞、评论、转推等操作 */}
                 <View style={styles.ops}>
                     {fleetOperation(
@@ -181,8 +212,8 @@ const styles = StyleSheet.create({
         color: colors.slate['400']
     },
     fleet: {
+        width: width,
         flexDirection: 'row',
-        flexGrow: 1,
         padding: 10,
         backgroundColor: '#ffffff'
     },
@@ -194,7 +225,8 @@ const styles = StyleSheet.create({
     },
     main: {
         marginLeft: 10,
-        flexGrow: 1
+        flex: 1,
+        flexDirection: 'column'
     },
     userInfo: {
         flexDirection: 'row',
@@ -220,19 +252,13 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     content: {
-        flexWrap: 'wrap',
         flex: 1,
-        fontWeight: '600'
-    },
-    imageMedia: {
-        width: '100%',
-        height: 200,
-        resizeMode: 'cover',
-        borderRadius: 15,
-        marginTop: 10
+        flexWrap: 'wrap',
+        fontWeight: '600',
+        fontSize: 18
     },
     ops: {
-        flexGrow: 1,
+        height: 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

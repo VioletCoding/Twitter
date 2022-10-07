@@ -22,7 +22,7 @@ interface Callback {
     close: () => void
     send: (content: string, mediaList?: Media[]) => void
 }
-const { width, height } = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 /**
  * 发推面板
  */

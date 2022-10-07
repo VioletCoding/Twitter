@@ -20,8 +20,8 @@ export interface FleetProps {
     retweet: number,
     // 当前用户是否点赞了推文
     liked: boolean,
-    // 媒体文件
-    mediaList?: Media[]
+    // 媒体文件JSON
+    attachJson?: string
 }
 
 /**

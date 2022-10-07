@@ -6634,11 +6634,6 @@ react-native-easy-grid@^0.2.2:
   dependencies:
     lodash "^4.17.15"
 
-react-native-fast-image@^8.6.1:
-  version "8.6.1"
-  resolved "https://registry.npmmirror.com/react-native-fast-image/-/react-native-fast-image-8.6.1.tgz"
-  integrity sha512-ILuP7EuakqHNzTr8ZbumhuxG4tE/wGQ66z4nEEuzc0FlqY6rYaPsnq/UD2ahoyFj6QP1WvA2RIK3odib+VcqWg==
-
 react-native-gradle-plugin@^0.0.7:
   version "0.0.7"
   resolved "https://registry.npmmirror.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.0.7.tgz"
